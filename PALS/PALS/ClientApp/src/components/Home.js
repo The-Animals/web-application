@@ -1,11 +1,107 @@
 import React, { Component } from 'react';
+import { Summary } from './Summary';
 
-import Alberta from '../shared/alberta-placeholder-image.png';
-import MLA from '../shared/carson.jpg';
-import BarGraph from '../shared/bar-graph-fruit.svg';
+import mapboxgl from 'mapbox-gl';
 
 export class Home extends Component {
     static displayName = Home.name;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            lng: -115.8155,
+            lat: 55.3337,
+            zoom: 4.08
+        };
+        this.hoveredStateId = null;
+    }
+
+    componentDidMount() {
+        
+        const map = new mapboxgl.Map({
+            container: this.mapContainer,
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [this.state.lng, this.state.lat],
+            zoom: this.state.zoom
+        });
+
+        map.on('load', () => {
+            map.addSource('states', {
+                type: 'vector',
+                url: 'mapbox://vppatel111.0ooesvor'
+            });
+
+            // The feature-state dependent fill-opacity expression will render the hover effect
+            // when a feature's hover state is set to true.
+            map.addLayer({
+                'id': 'state-fills',
+                'type': 'fill',
+                'source': 'states',
+                'source-layer': '2019Boundaries_ED-Shapefiles-2nzdq4',
+                'layout': {},
+                'paint': {
+                    'fill-color': '#627BC1',
+                    'fill-opacity': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        1,
+                        0.5
+                    ]
+                }
+            });
+
+            map.addLayer({
+                'id': 'state-borders',
+                'type': 'line',
+                'source': 'states',
+                'source-layer': '2019Boundaries_ED-Shapefiles-2nzdq4',
+                'layout': {},
+                'paint': {
+                    'line-color': '#627BC1',
+                    'line-width': 2
+                }
+            });
+
+            // When the user moves their mouse over the state-fill layer, we'll update the
+            // feature state for the feature under the mouse.
+            map.on('mousemove', 'state-fills', function (e) {
+                if (e.features.length > 0) {
+                    if (this.hoveredStateId) {
+                        map.setFeatureState(
+                            { source: 'states', id: this.hoveredStateId },
+                            { hover: false }
+                        );
+                    }
+                    this.hoveredStateId = e.features[0].id;
+                    map.setFeatureState(
+                        { source: 'states', id: this.hoveredStateId },
+                        { hover: true }
+                    );
+                }
+            });
+
+            // When the mouse leaves the state-fill layer, update the feature state of the
+            // previously hovered feature.
+            map.on('mouseleave', 'state-fills', function () {
+                if (this.hoveredStateId) {
+                    map.setFeatureState(
+                        { source: 'states', id: this.hoveredStateId },
+                        { hover: false }
+                    );
+                }
+                this.hoveredStateId = null;
+            });
+
+        });
+
+        map.on('move', () => {
+            this.setState({
+                lng: map.getCenter().lng.toFixed(4),
+                lat: map.getCenter().lat.toFixed(4),
+                zoom: map.getZoom().toFixed(2)
+            });
+        });
+    }
 
     // TODO: Break this up into components where each component is generated separately. 
     render() {
@@ -15,44 +111,16 @@ export class Home extends Component {
                 <div className="row">
 
                     <div className="col-sm">
-                        <img src={Alberta} />
+                        <div>
+                            <div className='sidebarStyle'>
+                                <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
+                            </div>
+                            <div ref={el => this.mapContainer = el} className='mapContainer' />
+                        </div>
                     </div>
 
                     <div className="col-sm">
-
-                        <div className="container">
-                            <div className="row mla-card">
-                                <div className="col-sm-3">
-                                    <img src={MLA} width="120px" height="150px" />
-                                </div>
-                                <div className="col-sm">
-                                    <p>Name: Carson, Member Jon (NDP) <br />
-                                        Riding: Edmonton-West Henday <br />
-                                        Legislative Phone #: 780.415.1800 <br />
-                                        Riding Phone #: 780.414.0711 <br />
-                                        Email: Edmonton.WestHenday@assembly.ab.ca</p>
-                                </div>
-                            </div>
-
-                            <div className="row summary-card">
-                                <h4>Summaries:</h4>
-                                <ol>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Aenean tempor libero eget nibh egestas, tempor pellentesque
-                                        nunc hendrerit. Cras rhoncus tellus ac urna consequat
-                                    pellentesque.</li>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Aenean tempor libero eget nibh egestas, tempor pellentesque
-                                        nunc hendrerit. Cras rhoncus tellus ac urna consequat
-                                    pellentesque.</li>
-                                </ol>
-                            </div>
-
-                            <div className="row">
-                                <img src={BarGraph} width="450px" />
-                            </div>
-                        </div>
-
+                        <Summary></Summary>
                     </div>
 
                 </div>
