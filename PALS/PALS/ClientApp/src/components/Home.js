@@ -3,10 +3,9 @@ import { Summary } from './Summary';
 
 import mapboxgl from 'mapbox-gl';
 
-export class Home extends Component {
-    static displayName = Home.name;
-
+export class MapBox extends Component {
     constructor(props) {
+
         super(props);
         this.state = {
             lng: -115.8155,
@@ -68,13 +67,13 @@ export class Home extends Component {
                 if (e.features.length > 0) {
                     if (this.hoveredStateId) {
                         map.setFeatureState(
-                            { source: 'states', id: this.hoveredStateId },
+                            { source: 'states', sourceLayer: '2019Boundaries_ED-Shapefiles-2nzdq4', id: this.hoveredStateId },
                             { hover: false }
                         );
                     }
                     this.hoveredStateId = e.features[0].id;
                     map.setFeatureState(
-                        { source: 'states', id: this.hoveredStateId },
+                        { source: 'states', sourceLayer: '2019Boundaries_ED-Shapefiles-2nzdq4', id: this.hoveredStateId },
                         { hover: true }
                     );
                 }
@@ -85,7 +84,7 @@ export class Home extends Component {
             map.on('mouseleave', 'state-fills', function () {
                 if (this.hoveredStateId) {
                     map.setFeatureState(
-                        { source: 'states', id: this.hoveredStateId },
+                        { source: 'states', sourceLayer: '2019Boundaries_ED-Shapefiles-2nzdq4', id: this.hoveredStateId },
                         { hover: false }
                     );
                 }
@@ -103,6 +102,22 @@ export class Home extends Component {
         });
     }
 
+    render() {
+        return (
+            <div>
+                <div className='sidebarStyle'>
+                    <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
+                </div>
+                <div ref={el => this.mapContainer = el} className='mapContainer' />
+            </div>
+        );
+    }
+
+}
+
+export class Home extends Component {
+    static displayName = Home.name;
+
     // TODO: Break this up into components where each component is generated separately. 
     render() {
     return (
@@ -111,12 +126,7 @@ export class Home extends Component {
                 <div className="row">
 
                     <div className="col-sm">
-                        <div>
-                            <div className='sidebarStyle'>
-                                <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
-                            </div>
-                            <div ref={el => this.mapContainer = el} className='mapContainer' />
-                        </div>
+                        <MapBox></MapBox>
                     </div>
 
                     <div className="col-sm">
