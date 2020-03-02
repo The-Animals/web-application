@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -42,8 +42,47 @@ const useStyles = makeStyles({
     }
 });
 
+async function getData(url = '', params = {}) {
+
+    if (params) { url += "?" + convertObjectToParams(params); }
+
+    // Default options are marked with *
+    const response = await fetch(url, {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client            
+    });
+    return await response.json(); // parses JSON response into native JavaScript objects
+}
+
+function convertObjectToParams(input) {
+
+    var output = [];
+    Object.keys(input).forEach(function (key) {
+        output.push(key + "=" + input[key]);
+    });
+    return output.join("&");
+
+}
+
 export default function MLAProfileCard() {
     const classes = useStyles();
+
+    const [MLAData, setMLAData] = useState({});
+    useEffect(() => {
+        async function getMLAData() {
+            const MLAData = await getData('MLA', { RidingID: 49 });
+            setMLAData(MLAData);
+            console.log(MLAData);
+        }
+        getMLAData();        
+    }, []);    
 
     return (
         <Card className={classes.root}>
@@ -55,27 +94,28 @@ export default function MLAProfileCard() {
             <div className={classes.details}>
                 <CardContent>
                     <Typography className={classes.title} variant="h5" component="h2" gutterBottom>
-                        Carson, Member Jon 
+                        {MLAData.name}
                     </Typography>
                     <Typography className={classes.pos} color="textSecondary">
-                        Edmonton-West Henday
+                        {MLAData.riding}
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Phone #:  <br />
-                                 780.415.1800 (Constituency Office) <br />                       
-                                 780.414.0711 (Legislature Office) <br />
+                                {MLAData.constituencyPhone} (Constituency Office) <br />                       
+                                {MLAData.legislaturePhone}  (Legislature Office) <br />
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Email:  <br />
-                        Edmonton.WestHenday@assembly.ab.ca
+                        {MLAData.email}
                     </Typography>
                 </CardContent>
                 <CardActions>                    
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-                        <Button className={classes.partyButton} size="small">NDP</Button>
+                        <Button className={classes.partyButton} size="small">{MLAData.party}</Button>
                     </Grid>
                 </CardActions>
             </div>
         </Card>
     );
+
 }
