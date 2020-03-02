@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Summary } from './Summary';
 
 import mapboxgl from 'mapbox-gl';
+//mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazc1bTBya3QwMzdyM2ZwZWdhOXVtaGF1In0.G9flLOmORDqLAVn3p8mWoQ';
 
 export class MapBox extends Component {
     constructor(props) {
@@ -91,6 +92,13 @@ export class MapBox extends Component {
                 this.hoveredStateId = null;
             });
 
+            map.on('click', 'state-fills', function (e) {
+                if (this.hoveredStateId) {
+                    // To get name: e.features[0].properties.EDName2017 ...
+                    //console.log(this.hoveredStateId, e.features[0]);
+                }                
+            });
+
         });
 
         map.on('move', () => {
@@ -126,7 +134,7 @@ export class Home extends Component {
                 <div className="row">
 
                     <div className="col-sm">
-                        <MapBox></MapBox>
+                        
                     </div>
 
                     <div className="col-sm">

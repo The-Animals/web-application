@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import MLA from '../shared/carson.jpg';
 import BarGraph from '../shared/bar-graph-fruit.svg';
+import MLAProfileCard from './MLAProfileCard.js';
 
 export class Summary extends Component {
 
@@ -9,17 +9,8 @@ export class Summary extends Component {
     return (
 
         <div className="container">
-            <div className="row mla-card">
-                <div className="col-sm-3">
-                    <img src={MLA} width="120px" height="150px" />
-                </div>
-                <div className="col-sm">
-                    <p>Name: Carson, Member Jon (NDP) <br />
-                        Riding: Edmonton-West Henday <br />
-                        Legislative Phone #: 780.415.1800 <br />
-                        Riding Phone #: 780.414.0711 <br />
-                        Email: Edmonton.WestHenday@assembly.ab.ca</p>
-                </div>
+            <div className="row">
+                <MLAProfileCard />
             </div>
 
             <div className="row summary-card">
