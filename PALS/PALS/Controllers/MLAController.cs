@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using PALS.Services;
+
 namespace PALS.Controllers
 {
     [Route("[controller]")]
@@ -26,6 +28,9 @@ namespace PALS.Controllers
         [HttpGet]
         public MLA Get(int RidingID)
         {
+            var databaseService = new DatabaseService();
+            //databaseService.GetTestBoi();
+
             return MLAs[RidingID];
         }
     }
