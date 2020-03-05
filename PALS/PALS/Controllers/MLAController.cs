@@ -29,9 +29,9 @@ namespace PALS.Controllers
         public MLA Get(int RidingID)
         {
             var databaseService = new DatabaseService();
-            //databaseService.GetTestBoi();
+            var mla = databaseService.GetMLA(49);
 
-            return MLAs[RidingID];
+            return mla;
         }
     }
 }

@@ -15,6 +15,10 @@ namespace PALS.Services
     public class DatabaseService
     {
 		private MySqlConnection connection;
+		private SshClient sshClient;
+
+		private uint localPort;
+
 		private MySQLConfig mySQLConfig;
 		private SSHConfig sSHConfig;
 
@@ -28,43 +32,57 @@ namespace PALS.Services
 			mySQLConfig = configService.GetMySQLConfig();
 			sSHConfig = configService.GetSSHConfig();
 
-			
-			var databaseUserName = "admin";
-			var databasePassword = "TheAnimals2020!";
+			(sshClient, localPort) = ConnectSsh(sSHConfig.Host, 
+												sSHConfig.User, 
+												sshKeyFile: sSHConfig.PrivateKey);
 
-			var (sshClient, localPort) = ConnectSsh(sSHConfig.Host, 
-													sSHConfig.User, 
-													sshKeyFile: sSHConfig.PrivateKey);
+			MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder
+			{
+				Server = mySQLConfig.Host,
+				Port = localPort,
+				UserID = mySQLConfig.User,
+				Password = mySQLConfig.Password,
+			};
+
+			this.connection = new MySqlConnection(csb.ConnectionString);										
+
+		}
+
+		public MLA GetMLA(int ridingNumber)
+		{
+			MLA mla = null;
+			var SQL = "SELECT * " +
+					  "FROM db.mlas " +
+					  "WHERE RidingNumber = @ridingNumber " +
+					  "LIMIT 1";
+
 			using (sshClient)
 			{
-				MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder
+				this.connection.Open();				
+
+				MySqlCommand cmd = new MySqlCommand(SQL, connection);
+				cmd.Parameters.AddWithValue("@ridingNumber", ridingNumber);
+
+				MySqlDataReader dataReader = cmd.ExecuteReader();
+				if (dataReader.Read())
 				{
-					Server = "127.0.0.1",
-					Port = localPort,
-					UserID = databaseUserName,
-					Password = databasePassword,
-				};
+					mla = new MLA();
+					mla.Name = (string)dataReader["FirstName"] +
+							   (string)dataReader["LastName"];
+					mla.Riding = (string)dataReader["RidingName"];
+					mla.ConstituencyPhone = (string)dataReader["RidingPhoneNumber"];
+					mla.LegislaturePhone = (string)dataReader["LegislativePhoneNumber"];
+					mla.Email = (string)dataReader["Email"];
+					mla.Party = (string)dataReader["Caucus"];					
 
-				using (var connection = new MySqlConnection(csb.ConnectionString))
-				{
-					connection.Open();
-
-					string SQL = "SELECT * FROM db.mlas LIMIT 1";
-
-					MySqlCommand cmd = new MySqlCommand(SQL, connection);
-					MySqlDataReader dataReader = cmd.ExecuteReader();
-					if (dataReader.Read())
-					{
-						var test1 = (int)dataReader["RidingNumber"];
-					    var test2 = (string)dataReader["FirstName"];
-						
-					}
-
-					dataReader.Close();
-					connection.Close();
 				}
+
+				dataReader.Close();
+				this.connection.Close();
 			}
 
+			return mla;
+			
 		}
 
 		/**

@@ -234,3 +234,4 @@ _Pvt_Extensions
 # Hide secrets
 config.ini
 id_rsa
+web_client_private
