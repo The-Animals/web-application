@@ -15,11 +15,11 @@ const rootElement = document.getElementById('root');
 const store = createStore(rootReducer);
 
 ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
-        <Provider store={store}>
-            <App />
-        </Provider>,
-  </BrowserRouter>,
+    <Provider store={store}>
+        <BrowserRouter basename={baseUrl}>
+            <App />        
+        </BrowserRouter>
+    </Provider>,
   rootElement);
 
 registerServiceWorker();

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -10,6 +11,10 @@ import Typography from '@material-ui/core/Typography';
 
 import MLA from '../shared/carson.jpg';
 import Grid from '@material-ui/core/Grid';
+
+const mapStateToProps = state => {
+    return { mla: state.mla };
+};
 
 const useStyles = makeStyles({
     root: {
@@ -71,18 +76,20 @@ function convertObjectToParams(input) {
 
 }
 
-export default function MLAProfileCard() {
+function MLAProfileCard(props) {
+
+    var mlaId = parseInt(props.mla.mlaId) || 1;    
+
     const classes = useStyles();
 
     const [MLAData, setMLAData] = useState({});
     useEffect(() => {
-        async function getMLAData() {
-            const MLAData = await getData('MLA', { RidingID: 49 });
-            setMLAData(MLAData);
-            console.log(MLAData);
+        async function getMLAData() {            
+            const MLAData = await getData('MLA', { RidingID: mlaId });
+            setMLAData(MLAData);            
         }
         getMLAData();        
-    }, []);    
+    }, [mlaId]);    
 
     return (
         <Card className={classes.root}>
@@ -117,5 +124,6 @@ export default function MLAProfileCard() {
             </div>
         </Card>
     );
-
 }
+
+export default connect(mapStateToProps)(MLAProfileCard);

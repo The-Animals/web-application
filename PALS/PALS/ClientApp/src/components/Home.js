@@ -1,23 +1,34 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+
 import { Summary } from './Summary';
+import { viewMLA } from "../actions/index";
 
 import mapboxgl from 'mapbox-gl';
-//mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazc1bTBya3QwMzdyM2ZwZWdhOXVtaGF1In0.G9flLOmORDqLAVn3p8mWoQ';
 
-export class MapBox extends Component {
+const mapDispatchToProps = dispatch => {
+    return {
+        viewMLA: mlaId => dispatch(viewMLA(mlaId))
+    }
+}
+
+class MapBox extends Component {
     constructor(props) {
 
         super(props);
         this.state = {
             lng: -115.8155,
             lat: 55.3337,
-            zoom: 4.08
+            zoom: 4.08,
+            props: props
         };
-        this.hoveredStateId = null;
+        this.hoveredStateId = null;        
     }
 
     componentDidMount() {
-        
+
+        const self = this;
+
         const map = new mapboxgl.Map({
             container: this.mapContainer,
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -94,8 +105,10 @@ export class MapBox extends Component {
 
             map.on('click', 'state-fills', function (e) {
                 if (this.hoveredStateId) {
-                    // To get name: e.features[0].properties.EDName2017 ...
-                    //console.log(this.hoveredStateId, e.features[0]);
+
+                    const mlaId = e.features[0].properties.EDNumber20;
+                    self.props.viewMLA({ mlaId });     
+                    
                 }                
             });
 
@@ -126,7 +139,6 @@ export class MapBox extends Component {
 export class Home extends Component {
     static displayName = Home.name;
 
-    // TODO: Break this up into components where each component is generated separately. 
     render() {
     return (
         <div>
@@ -134,7 +146,7 @@ export class Home extends Component {
                 <div className="row">
 
                     <div className="col-sm">
-                        
+                        <Map />
                     </div>
 
                     <div className="col-sm">
@@ -147,3 +159,10 @@ export class Home extends Component {
     );
     }
 }
+
+const Map = connect(
+    null,
+    mapDispatchToProps
+)(MapBox);
+export default Map;
+

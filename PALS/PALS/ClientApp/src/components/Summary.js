@@ -16,7 +16,7 @@ export class Summary extends Component {
 
         <div className="container">
             <div className="row">
-                <MLAProfileCard mlaData={this.mlaData} />
+                <MLAProfileCard />
             </div>
 
             <div className="row">
