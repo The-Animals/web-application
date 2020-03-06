@@ -67,7 +67,7 @@ namespace PALS.Services
 				if (dataReader.Read())
 				{
 					mla = new MLA();
-					mla.Name = (string)dataReader["FirstName"] +
+					mla.Name = (string)dataReader["FirstName"] + " " +
 							   (string)dataReader["LastName"];
 					mla.Riding = (string)dataReader["RidingName"];
 					mla.ConstituencyPhone = (string)dataReader["RidingPhoneNumber"];
