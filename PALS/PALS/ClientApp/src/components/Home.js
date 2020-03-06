@@ -146,7 +146,7 @@ export class Home extends Component {
                 <div className="row">
 
                     <div className="col-sm">
-                        <Map />
+
                     </div>
 
                     <div className="col-sm">
