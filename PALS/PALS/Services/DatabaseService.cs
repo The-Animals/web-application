@@ -32,8 +32,8 @@ namespace PALS.Services
 			mySQLConfig = configService.GetMySQLConfig();
 			sSHConfig = configService.GetSSHConfig();
 
-			(sshClient, localPort) = ConnectSsh(sSHConfig.Host, 
-												sSHConfig.User, 
+			(sshClient, localPort) = ConnectSsh(sSHConfig.Host,
+												sSHConfig.User,
 												sshKeyFile: sSHConfig.PrivateKey);
 
 			MySqlConnectionStringBuilder csb = new MySqlConnectionStringBuilder
@@ -44,7 +44,7 @@ namespace PALS.Services
 				Password = mySQLConfig.Password,
 			};
 
-			this.connection = new MySqlConnection(csb.ConnectionString);										
+			this.connection = new MySqlConnection(csb.ConnectionString);
 
 		}
 
@@ -58,7 +58,7 @@ namespace PALS.Services
 
 			using (sshClient)
 			{
-				this.connection.Open();				
+				this.connection.Open();
 
 				MySqlCommand cmd = new MySqlCommand(SQL, connection);
 				cmd.Parameters.AddWithValue("@ridingNumber", ridingNumber);
@@ -73,7 +73,7 @@ namespace PALS.Services
 					mla.ConstituencyPhone = (string)dataReader["RidingPhoneNumber"];
 					mla.LegislaturePhone = (string)dataReader["LegislativePhoneNumber"];
 					mla.Email = (string)dataReader["Email"];
-					mla.Party = (string)dataReader["Caucus"];					
+					mla.Party = (string)dataReader["Caucus"];
 
 				}
 
@@ -82,7 +82,41 @@ namespace PALS.Services
 			}
 
 			return mla;
-			
+
+		}
+
+		public List<Summary> GetSummaries(int ridingNumber)
+		{
+			var summaries = new List<Summary>();
+
+			var SQL = "SELECT Sentence " +
+					  "FROM db.summaries_@ridingNumber " +
+					  "LIMIT 10";
+
+			using (sshClient)
+			{
+				this.connection.Open();
+
+				var cmd = new MySqlCommand(SQL, connection);
+				cmd.Parameters.AddWithValue("@ridingNumber", ridingNumber);
+				var dataReader = cmd.ExecuteReader();
+
+				var i = 1;
+				while (dataReader.Read())
+				{
+					summaries.Add(new Summary
+					{
+						Text = (string)dataReader["Sentence"],
+						SummaryRank = i
+					});
+					++i;
+				}
+
+				dataReader.Close();
+				this.connection.Close();
+			}
+
+			return summaries;
 		}
 
 		/**
@@ -91,7 +125,7 @@ namespace PALS.Services
 		 */
 		public static (SshClient SshClient, uint Port) ConnectSsh
 			(string sshHostName, string sshUserName, string sshPassword = null,
-			 string sshKeyFile = null, string sshPassPhrase = null, int sshPort = 22, 
+			 string sshKeyFile = null, string sshPassPhrase = null, int sshPort = 22,
 			 string databaseServer = "localhost", int databasePort = 5000)
 		{
 			// check arguments

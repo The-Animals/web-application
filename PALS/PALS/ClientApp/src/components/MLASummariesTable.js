@@ -1,5 +1,7 @@
-import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,16 +17,20 @@ const useStyles = makeStyles({
     },
 });
 
-function createData(summaryRank, summary) {
-    return { summaryRank, summary };
-}
+function MLASummariesTable(props) {
 
-const rows = [
-    createData("1", "Test summary")
-];
-
-export default function MLASummariesTable() {
+    const mlaId = parseInt(props.mla.mlaId) || 1;
     const classes = useStyles();
+
+    const [MLASummaries, setMLASummaries] = useState([]);
+    useEffect(() => {
+        async function getMLASummaries() {
+            const MLASummaries = await getData('api/GetSummary', { RidingID: mlaId });
+            setMLASummaries(MLASummaries);
+            console.log(MLASummaries);
+        }
+        getMLASummaries();
+    }, [mlaId]);
 
     return (
         <TableContainer component={Paper}>
@@ -33,14 +39,14 @@ export default function MLASummariesTable() {
                     <TableRow><TableCell>Summaries</TableCell></TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map(row => (
+                    {MLASummaries.map(row => (
                         <TableRow key={row.summaryRank}>
                             <TableCell align="left">
                                 {row.summaryRank}
-                            </TableCell>  
+                            </TableCell>
                             <TableCell align="left">
-                                {row.summary}
-                            </TableCell>                            
+                                {row.text}
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
