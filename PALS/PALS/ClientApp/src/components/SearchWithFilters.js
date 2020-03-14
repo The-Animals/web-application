@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
+
+import { getData } from '../services/AjaxService.js';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -14,6 +16,16 @@ const useStyles = makeStyles(theme => ({
 export default function SearchWithFilters() {
     const classes = useStyles();
 
+    const [MLAs, setMLAsData] = useState([]);
+    useEffect(() => {
+        async function getAllMLAsData() {
+            const MLAs = await getData('api/GetAllMLAs');
+            setMLAsData(MLAs);
+            console.log(MLAs);
+        }
+        getAllMLAsData();
+    });
+
     const ridings = [
         {
             value: 'edmonton-west-henday',
@@ -25,27 +37,12 @@ export default function SearchWithFilters() {
         }
     ];
 
-    const mlas = [
-        {
-            value: 'edmonton-west-henday',
-            label: 'Edmonton-West Henday',
-        },
-        {
-            value: 'edmonton-beverly-clareview',
-            label: 'Edmonton-Beverly-Clareview',
-        }
-    ];
-
     const [riding, setRiding] = React.useState('edmonton-west-henday');
-    const [mla, setMLA] = React.useState('edmonton-west-henday');
 
     const handleRidingChange = event => {
         setRiding(event.target.value);
     };
 
-    const handleMLAChange = event => {
-        setRiding(event.target.value);
-    };
 
     // TODO: Replace native date pickers with material-ui/pickers
     return (
@@ -73,16 +70,16 @@ export default function SearchWithFilters() {
         </TextField>
 
         <TextField
-            id="standard-select-currency"
+            id="standard-select-mla"
             select
             label="Select"
             value={riding}
             onChange={handleRidingChange}
             helperText="Please select an MLA"
         >
-            {ridings.map(option => (
-                <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+            {MLAs.map(option => (
+                <MenuItem key={option.name} value={option.name}>
+                    {option.name}
                 </MenuItem>
             ))}
         </TextField>

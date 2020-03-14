@@ -88,6 +88,43 @@ namespace PALS.Services
 
 		}
 
+		public List<MLA> GetAllMLAs()
+		{
+			var mlas = new List<MLA>();
+			var SQL = "SELECT * " +
+					  "FROM db.mlas ";
+
+			using (sshClient)
+			{
+				this.connection.Open();
+
+				var cmd = new MySqlCommand(SQL, connection);
+				
+
+				var dataReader = cmd.ExecuteReader();
+				while (dataReader.Read())
+				{
+					var mla = new MLA();
+					mla.Name = FromDBVal<string>(dataReader["FirstName"])
+								+ " " +
+							   FromDBVal<string>(dataReader["LastName"]);
+
+					mla.Riding = FromDBVal<string>(dataReader["RidingName"]);
+					mla.ConstituencyPhone = FromDBVal<string>(dataReader["RidingPhoneNumber"]);
+					mla.LegislaturePhone = FromDBVal<string>(dataReader["LegislativePhoneNumber"]);
+					mla.Email = FromDBVal<string>(dataReader["Email"]);
+					mla.Party = FromDBVal<string>(dataReader["Caucus"]);
+
+					mlas.Add(mla);
+				}
+									
+				dataReader.Close();
+				this.connection.Close();
+			}
+
+			return mlas;
+		}
+
 		public List<Summary> GetSummaries(int ridingNumber)
 		{
 			var summaries = new List<Summary>();
@@ -120,6 +157,18 @@ namespace PALS.Services
 			}
 
 			return summaries;
+		}
+
+		public static T FromDBVal<T>(object obj)
+		{
+			if (obj == null || obj == DBNull.Value)
+			{
+				return default(T); // returns the default value for the type
+			}
+			else
+			{
+				return (T)obj;
+			}
 		}
 
 		/**
