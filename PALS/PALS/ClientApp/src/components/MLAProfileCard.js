@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -10,6 +11,12 @@ import Typography from '@material-ui/core/Typography';
 
 import MLA from '../shared/carson.jpg';
 import Grid from '@material-ui/core/Grid';
+
+import { getData } from '../services/AjaxService.js';
+
+const mapStateToProps = state => {
+    return { mla: state.mla };
+};
 
 const useStyles = makeStyles({
     root: {
@@ -42,26 +49,9 @@ const useStyles = makeStyles({
     }
 });
 
-async function getData(url = '', params = {}) {
+function MLAProfileCard(props) {
 
-    if (params) { url += "?" + convertObjectToParams(params); }
-
-    // Default options are marked with *
-    const response = await fetch(url, {
-        method: 'GET', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client            
-    });
-    return await response.json(); // parses JSON response into native JavaScript objects
-}
-
-function convertObjectToParams(input) {
+    var mlaId = parseInt(props.mla.mlaId) || 1;
 
     var output = [];
     Object.keys(input).forEach(function (key) {
@@ -78,12 +68,11 @@ export default function MLAProfileCard() {
     const [MLAData, setMLAData] = useState({});
     useEffect(() => {
         async function getMLAData() {
-            const MLAData = await getData('MLA', { RidingID: 49 });
+            const MLAData = await getData('MLA', { RidingID: mlaId });
             setMLAData(MLAData);
-            console.log(MLAData);
         }
-        getMLAData();        
-    }, []);    
+        getMLAData();
+    }, [mlaId]);
 
     return (
         <Card className={classes.root}>
@@ -102,7 +91,7 @@ export default function MLAProfileCard() {
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Phone #:  <br />
-                                {MLAData.constituencyPhone} (Constituency Office) <br />                       
+                                {MLAData.constituencyPhone} (Constituency Office) <br />
                                 {MLAData.legislaturePhone}  (Legislature Office) <br />
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
@@ -110,7 +99,7 @@ export default function MLAProfileCard() {
                         {MLAData.email}
                     </Typography>
                 </CardContent>
-                <CardActions>                    
+                <CardActions>
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
                         <Button className={classes.partyButton} size="small">{MLAData.party || ""}</Button>
                     </Grid>
@@ -118,5 +107,6 @@ export default function MLAProfileCard() {
             </div>
         </Card>
     );
-
 }
+
+export default connect(mapStateToProps)(MLAProfileCard);

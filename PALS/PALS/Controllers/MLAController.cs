@@ -13,25 +13,18 @@ namespace PALS.Controllers
     [ApiController]
     public class MLAController : ControllerBase
     {
-        // MLAs correspond to the riding IDs on the ShapeFile.
-        // TODO: Grab this data from a DB.
-        private Dictionary<int, MLA> MLAs = new Dictionary<int, MLA>()
-        {
-            { 49, new MLA { Name = "Carson, Member Jon ",
-                            Riding = "Edmonton-West Henday",
-                            ConstituencyPhone = "780.415.1800",
-                            LegislaturePhone = "780.414.0711",
-                            Email = "Edmonton.WestHenday@assembly.ab.ca",
-                            Party = "NDP"} }
-        };
 
         [HttpGet]
-        public MLA Get(int RidingID)
+        public async Task<MLA> MLA(int RidingID)
         {
             var databaseService = new DatabaseService();
-            var mla = databaseService.GetMLA(49);
+            var mla = databaseService.GetMLA(RidingID);
+
+            var minioService = new MinioService();
+            await minioService.Run("images", "Tyler_Shandro.jpg");
 
             return mla;
         }
+
     }
 }

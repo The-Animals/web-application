@@ -11,18 +11,17 @@ namespace PALS.Services
 {    
     public class ConfigService
     {
-
-        FileIniDataParser parser;
+        private IniData data;
 
         public ConfigService()
         {
-            parser = new FileIniDataParser();
+            var parser = new FileIniDataParser();
+            data = parser.ReadFile("config.ini");
         }
 
         public MySQLConfig GetMySQLConfig()
         {
-            var mySQLConfig = new MySQLConfig();
-            IniData data = parser.ReadFile("config.ini");
+            var mySQLConfig = new MySQLConfig();            
 
             mySQLConfig.Host = data["mysql"]["host"];
             mySQLConfig.Port = int.Parse(data["mysql"]["port"]);
@@ -35,13 +34,23 @@ namespace PALS.Services
         public SSHConfig GetSSHConfig()
         {
             var sshConfig = new SSHConfig();
-            IniData data = parser.ReadFile("config.ini");
 
             sshConfig.Host = data["ssh"]["host"];
             sshConfig.Port = int.Parse(data["ssh"]["port"]);
             sshConfig.User = data["ssh"]["user"];
             sshConfig.PrivateKey = data["ssh"]["pkey"];
             return sshConfig;
+        }
+
+        public MinioConfig GetMinioConfig()
+        {
+            var minioConfig = new MinioConfig();
+
+            minioConfig.Url = data["minio"]["url"];
+            minioConfig.AccessKey = data["minio"]["access_key"];
+            minioConfig.SecretKey = data["minio"]["secret_key"];
+
+            return minioConfig;
         }
     }
 }
