@@ -30,7 +30,7 @@ export default function MLASummariesTable() {
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
-                    <TableRow>Summaries</TableRow>
+                    <TableRow><TableCell>Summaries</TableCell></TableRow>
                 </TableHead>
                 <TableBody>
                     {rows.map(row => (

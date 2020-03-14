@@ -72,6 +72,7 @@ function convertObjectToParams(input) {
 }
 
 export default function MLAProfileCard() {
+
     const classes = useStyles();
 
     const [MLAData, setMLAData] = useState({});
@@ -111,7 +112,7 @@ export default function MLAProfileCard() {
                 </CardContent>
                 <CardActions>                    
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-                        <Button className={classes.partyButton} size="small">{MLAData.party}</Button>
+                        <Button className={classes.partyButton} size="small">{MLAData.party || ""}</Button>
                     </Grid>
                 </CardActions>
             </div>

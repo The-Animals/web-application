@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 
 import BarGraph from '../shared/bar-graph-fruit.svg';
 import MLAProfileCard from './MLAProfileCard.js';
@@ -24,7 +24,7 @@ export class Summary extends Component {
             </div>
 
             <div className="row">
-                <img src={BarGraph} width="450px" />
+                <img src={BarGraph} alt="Amazing interactive bar graph!" width="450px" />
             </div>
         </div>
 
