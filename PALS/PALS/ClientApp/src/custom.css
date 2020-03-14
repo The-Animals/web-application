@@ -23,10 +23,6 @@ code {
     margin-bottom: 10px;
 }
 
-.search-result-container {
-    width: 400px;
-}
-
 .sidebarStyle {
     display: inline-block;
     position: absolute;
@@ -46,4 +42,11 @@ code {
     right: 0;
     left: 0;
     bottom: 0;
+}
+
+/* Increase max width for search screen. */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1390px;
+    }
 }

@@ -13,32 +13,27 @@ export class Search extends Component {
         <h1>Search</h1>
 
             <div className="container">
+
                 <div className="row">
-
-                    <div className="col-sm">
-
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-secondary">UDP</button>
-                            <button type="button" class="btn btn-secondary">NDP</button>
-                            <button type="button" class="btn btn-secondary">AB</button>
-                            <button type="button" class="btn btn-secondary">All</button>
-                        </div>
-
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-primary">UCP</button>
+                        <button type="button" class="btn btn-secondary">NDP</button>
+                        <button type="button" class="btn btn-secondary">AB</button>
+                        <button type="button" class="btn btn-secondary">All</button>
                     </div>
+                </div>
 
-                    <div className="col-sm">
-                        <SearchWithFilters></SearchWithFilters>
-                    </div>
-
+                <div className="row">
+                    <SearchWithFilters></SearchWithFilters>
                 </div>
 
                 <div className="row">
 
-                    <div className="col-sm">
+                    <div className="col-7">
                         <SearchTable></SearchTable>
                     </div>
 
-                    <div className="col-sm" className="search-result-container">
+                    <div className="col-5">
                         <Summary></Summary>
                     </div>
 
