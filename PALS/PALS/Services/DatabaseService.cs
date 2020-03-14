@@ -122,33 +122,6 @@ namespace PALS.Services
 			return summaries;
 		}
 
-		public List<string> GetSummaries(int ridingNumber)
-		{
-			var summaries = new List<string>();
-
-			var SQL = "SELECT Sentence" +
-					  "FROM db.summaries_@ridingNumber " +
-					  "LIMIT 1";
-
-			using (sshClient)
-			{
-				this.connection.Open();
-
-				var cmd = new MySqlCommand(SQL, connection);
-				cmd.Parameters.AddWithValue("@ridingNumber", ridingNumber);
-				var dataReader = cmd.ExecuteReader();
-				while (dataReader.Read())
-				{
-					summaries.Add((string)dataReader["Sentence"]);
-				}
-
-				dataReader.Close();
-				this.connection.Close();
-			}
-
-			return summaries;
-		}
-
 		/**
 		 * Setup a SSH tunnel.
 		 * Credit to: https://mysqlconnector.net/tutorials/connect-ssh/

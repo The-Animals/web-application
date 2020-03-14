@@ -52,17 +52,6 @@ const useStyles = makeStyles({
 function MLAProfileCard(props) {
 
     var mlaId = parseInt(props.mla.mlaId) || 1;
-
-    var output = [];
-    Object.keys(input).forEach(function (key) {
-        output.push(key + "=" + input[key]);
-    });
-    return output.join("&");
-
-}
-
-export default function MLAProfileCard() {
-
     const classes = useStyles();
 
     const [MLAData, setMLAData] = useState({});
