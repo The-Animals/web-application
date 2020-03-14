@@ -9,11 +9,12 @@ using PALS.Services;
 
 namespace PALS.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MLAController : ControllerBase
     {
 
+        [Route("~/api/GetMLA")]
         [HttpGet]
         public async Task<MLA> MLA(int RidingID)
         {

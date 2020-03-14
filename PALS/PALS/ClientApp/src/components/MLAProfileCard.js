@@ -57,7 +57,7 @@ function MLAProfileCard(props) {
     const [MLAData, setMLAData] = useState({});
     useEffect(() => {
         async function getMLAData() {
-            const MLAData = await getData('MLA', { RidingID: mlaId });
+            const MLAData = await getData('api/GetMLA', { RidingID: mlaId });
             setMLAData(MLAData);
         }
         getMLAData();
