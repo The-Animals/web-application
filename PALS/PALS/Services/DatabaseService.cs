@@ -98,8 +98,7 @@ namespace PALS.Services
 			{
 				this.connection.Open();
 
-				var cmd = new MySqlCommand(SQL, connection);
-				
+				var cmd = new MySqlCommand(SQL, connection);				
 
 				var dataReader = cmd.ExecuteReader();
 				while (dataReader.Read())
@@ -110,6 +109,7 @@ namespace PALS.Services
 							   FromDBVal<string>(dataReader["LastName"]);
 
 					mla.Riding = FromDBVal<string>(dataReader["RidingName"]);
+					mla.RidingNumber = FromDBVal<int>(dataReader["RidingNumber"]);
 					mla.ConstituencyPhone = FromDBVal<string>(dataReader["RidingPhoneNumber"]);
 					mla.LegislaturePhone = FromDBVal<string>(dataReader["LegislativePhoneNumber"]);
 					mla.Email = FromDBVal<string>(dataReader["Email"]);
@@ -151,6 +151,45 @@ namespace PALS.Services
 					});
 					++i;
 				}
+
+				dataReader.Close();
+				this.connection.Close();
+			}
+
+			return summaries;
+		}
+
+		public Dictionary<int, List<Summary>> GetSummariesWithFilter(Filter filter)
+		{
+			var summaries = new Dictionary<int, List<Summary>>();
+
+			var SQL = "Select Sentence " +
+					  "FROM db.summaries_@ridingNumber " +
+					  "LIMIT 1";
+
+			using (sshClient)
+			{
+				this.connection.Open();
+
+				var cmd = new MySqlCommand(SQL, connection);
+				cmd.Parameters.AddWithValue("@ridingNumber", filter.RidingNumber);
+				var dataReader = cmd.ExecuteReader();
+
+				var i = 1;
+				var listOfSentences = new List<Summary>();
+				while (dataReader.Read())
+				{
+
+					listOfSentences.Add(new Summary
+					{
+						Text = (string)dataReader["Sentence"],
+						SummaryRank = i
+					});
+					++i;
+				}
+
+				summaries.Add(filter.RidingNumber,
+							  listOfSentences);
 
 				dataReader.Close();
 				this.connection.Close();

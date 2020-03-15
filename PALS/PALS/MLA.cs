@@ -9,6 +9,8 @@ namespace PALS
 
         public string Riding { get; set; }
 
+        public int RidingNumber { get; set; }
+
         public string ConstituencyPhone { get; set; }
 
         public string LegislaturePhone { get; set; }

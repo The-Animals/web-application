@@ -3,6 +3,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 
+import Button from '@material-ui/core/Button';
+import SearchIcon from '@material-ui/icons/Search';
+
 import { getData } from '../services/AjaxService.js';
 
 const useStyles = makeStyles(theme => ({
@@ -15,16 +18,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function SearchWithFilters() {
     const classes = useStyles();
+    const reloadMlas = false;
 
     const [MLAs, setMLAsData] = useState([]);
     useEffect(() => {
         async function getAllMLAsData() {
             const MLAs = await getData('api/GetAllMLAs');
-            setMLAsData(MLAs);
-            console.log(MLAs);
+            setMLAsData(MLAs);            
         }
         getAllMLAsData();
-    });
+    }, [reloadMlas]); // Avoid spamming server to reload MLAs
 
     const ridings = [
         {
@@ -37,12 +40,28 @@ export default function SearchWithFilters() {
         }
     ];
 
-    const [riding, setRiding] = React.useState('edmonton-west-henday');
-
+    const [riding, setRiding] = useState('edmonton-west-henday');
     const handleRidingChange = event => {
         setRiding(event.target.value);
     };
 
+    // TODO: Link selecting MLA with selecting riding.
+    const [mla, setMla] = useState(0);
+    const handleMlaChange = event => {        
+        setMla(event.target.value);
+        console.log(mla);
+    };
+
+    // TODO: Display search results gotten from the backend.
+    const [searchResults, setSearchResults] = useState([]);
+    const handleSearch = async function () {
+        const results = await getData(
+            'api/GetSummaryWithFilter',
+            { ridingNumber: mla }
+        );
+        setSearchResults(results);
+        console.log(results);
+    } 
 
     // TODO: Replace native date pickers with material-ui/pickers
     return (
@@ -53,6 +72,16 @@ export default function SearchWithFilters() {
             id="standard-search"
             label="Search field"
             type="search" />
+
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSearch}
+            className={classes.button}
+            endIcon={<SearchIcon />}
+        >
+            Search
+        </Button>
 
         <TextField
             id="standard-select-currency"
@@ -73,12 +102,12 @@ export default function SearchWithFilters() {
             id="standard-select-mla"
             select
             label="Select"
-            value={riding}
-            onChange={handleRidingChange}
+            value={mla}
+            onChange={handleMlaChange}
             helperText="Please select an MLA"
         >
             {MLAs.map(option => (
-                <MenuItem key={option.name} value={option.name}>
+                <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
                     {option.name}
                 </MenuItem>
             ))}
