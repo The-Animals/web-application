@@ -15,11 +15,11 @@ export class Search extends Component {
             <div className="container">
 
                 <div className="row">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-primary">UCP</button>
-                        <button type="button" class="btn btn-secondary">NDP</button>
-                        <button type="button" class="btn btn-secondary">AB</button>
-                        <button type="button" class="btn btn-secondary">All</button>
+                    <div className="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" className="btn btn-primary">UCP</button>
+                        <button type="button" className="btn btn-secondary">NDP</button>
+                        <button type="button" className="btn btn-secondary">AB</button>
+                        <button type="button" className="btn btn-secondary">All</button>
                     </div>
                 </div>
 

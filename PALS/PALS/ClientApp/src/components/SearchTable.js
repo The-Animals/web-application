@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +11,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 import MLA from '../shared/carson.jpg';
+
+const mapStateToProps = state => {
+    return { searchResults: state.searchResults };
+};
 
 const PersonTableCell = withStyles(theme => ({
     head: {
@@ -27,16 +33,32 @@ const useStyles = makeStyles({
     },
 });
 
-function createData(name, profileImage, summary) {
-    return { name, profileImage, summary };
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
-const rows = [
-    createData("Carson, Member Jon", MLA, "Test summary")
-];
-
-export default function SearchTable() {
+function SearchTable(props) {
     const classes = useStyles();
+
+    const searchResults =
+        isEmpty(props.searchResults) ?
+            { results: [] } :
+            props.searchResults;
+
+    const mlaRows = Object.keys(searchResults.results).map(mlaId =>
+        <TableRow key={mlaId}>
+            <PersonTableCell component="th" scope="row">
+                <img src={MLA} width="120px" height="150px" />
+            </PersonTableCell>
+            <TableCell align="left">
+                <ol>
+                {searchResults.results[mlaId].map(sentence => (
+                    <li key={sentence.SummaryRank}>{sentence.Text}</li>
+                ))}
+                </ol>
+            </TableCell>
+        </TableRow>
+    );
 
     return (
         <TableContainer component={Paper}>
@@ -48,28 +70,11 @@ export default function SearchTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map(row => (
-                        <TableRow key={row.name}>
-                            <PersonTableCell component="th" scope="row">
-                                <img src={row.profileImage} width="120px" height="150px" />
-                            </PersonTableCell>
-                            <TableCell align="left">
-                                <ol>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Aenean tempor libero eget nibh egestas, tempor pellentesque
-                                        nunc hendrerit. Cras rhoncus tellus ac urna consequat
-                                        pellentesque.</li>
-                                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Aenean tempor libero eget nibh egestas, tempor pellentesque
-                                        nunc hendrerit. Cras rhoncus tellus ac urna consequat
-                                    pellentesque.</li>
-                                    ...
-                                </ol>
-                            </TableCell>                            
-                        </TableRow>
-                    ))}
+                    {mlaRows}
                 </TableBody>
             </Table>
         </TableContainer>
     );
 }
+
+export default connect(mapStateToProps)(SearchTable);
