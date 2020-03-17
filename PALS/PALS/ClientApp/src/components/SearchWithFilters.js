@@ -46,12 +46,27 @@ function SearchWithFilters(props) {
     const handleQueryChange = event => {
         setQuery(event.target.value);
     };
-    
+
+    const [startDate, setStartDate] = useState("2019-01-01");
+    const handleStartDateChange = event => {
+        setStartDate(event.target.value);
+    };
+
+    const [endDate, setEndDate] = useState("2020-04-01");
+    const handleEndDateChange = event => {
+        setEndDate(event.target.value);
+    };
+
     const [searchResults, setSearchResults] = useState([]);
     const handleSearch = async function () {
         const results = await getData(
             'api/GetSummaryWithFilter',
-            { RidingNumber: mla, Query: query }
+            {
+                RidingNumber: mla,
+                Query: query,
+                StartDate: startDate,
+                EndDate: endDate
+            }
         );
         setSearchResults(results);
         props.updateSearchResults({ results });        
@@ -113,7 +128,8 @@ function SearchWithFilters(props) {
             id="startDate"
             label="From Date"
             type="date"
-            defaultValue="2017-05-24"
+            defaultValue={startDate}
+            onChange={handleStartDateChange}
             className={classes.textField}
             InputLabelProps={{
                 shrink: true,
@@ -124,7 +140,8 @@ function SearchWithFilters(props) {
             id="endDate"
             label="To Date"
             type="date"
-            defaultValue="2017-05-24"
+            defaultValue={endDate}            
+            onChange={handleEndDateChange}
             className={classes.textField}
             InputLabelProps={{
                 shrink: true,
