@@ -34,16 +34,16 @@ namespace PALS.Controllers
         // TODO: Implemented parsing a JSON get object instead of multiple parameters.
         [Route("~/api/GetSummaryWithFilter")]
         [HttpGet]
-        public string GetSummaryWithFilter(int ridingNumber)
+        public string GetSummaryWithFilter(string Query, int? RidingNumber)
         {
 
             //dynamic searchFilter = JObject.Parse(inputFilter);
 
             var filter = new Filter
             {
-            //    Query = searchFilter.query,
+                  Query = Query,
             //    MLAId = searchFilter.mlaId,
-                  RidingNumber = ridingNumber
+                  RidingNumber = RidingNumber != 0 ? RidingNumber : null 
             //    RidingNumber = searchFilter.ridingNumber,
             //    Caucus = searchFilter.caucus,
             //    StartDate = DateTime.Parse(searchFilter.startDate),
