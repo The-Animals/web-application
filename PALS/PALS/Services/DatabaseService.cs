@@ -162,16 +162,16 @@ namespace PALS.Services
 		public Dictionary<int, List<Summary>> GetSummariesWithFilter(Filter filter)
 		{
 			var summaries = new Dictionary<int, List<Summary>>();
-
-			var SQL = "Select Sentence " +
-					  "FROM db.summaries_@ridingNumber " +
-					  "LIMIT 1";
+			var STORED_PROC = "db.search_with_filter";
 
 			using (sshClient)
 			{
 				this.connection.Open();
-
-				var cmd = new MySqlCommand(SQL, connection);
+				
+				MySqlCommand cmd = new MySqlCommand(STORED_PROC, connection);
+				cmd.CommandType = CommandType.StoredProcedure;
+				
+				cmd.Parameters.AddWithValue("@query", filter.Query);
 				cmd.Parameters.AddWithValue("@ridingNumber", filter.RidingNumber);
 				var dataReader = cmd.ExecuteReader();
 
@@ -179,17 +179,24 @@ namespace PALS.Services
 				var listOfSentences = new List<Summary>();
 				while (dataReader.Read())
 				{
-
-					listOfSentences.Add(new Summary
+					var ridingNumber = (int)dataReader["RidingNumber"];
+					var summary = new Summary
 					{
 						Text = (string)dataReader["Sentence"],
-						SummaryRank = i
-					});
-					++i;
-				}
+						SummaryRank = (int)dataReader["MLARank"]
+					};
 
-				summaries.Add(filter.RidingNumber,
-							  listOfSentences);
+					if (summaries.ContainsKey(ridingNumber))
+					{
+						summaries[ridingNumber].Add(summary);
+					} 
+					else
+					{
+						summaries[ridingNumber] = new List<Summary>() { summary };
+					}
+
+
+				}
 
 				dataReader.Close();
 				this.connection.Close();

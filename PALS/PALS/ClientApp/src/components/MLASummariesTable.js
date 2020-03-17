@@ -31,8 +31,7 @@ function MLASummariesTable(props) {
     useEffect(() => {
         async function getMLASummaries() {
             const MLASummaries = await getData('api/GetSummary', { RidingID: mlaId });
-            setMLASummaries(MLASummaries);
-            console.log(MLASummaries);
+            setMLASummaries(MLASummaries);            
         }
         getMLASummaries();
     }, [mlaId]);

@@ -17,7 +17,7 @@ namespace PALS.Models
 
         public DateTime EndDate { get; set; }
 
-        public int RidingNumber { get; set; }
+        public int? RidingNumber { get; set; }
 
         public string Riding { get; set; }
 

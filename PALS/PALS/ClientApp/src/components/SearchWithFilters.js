@@ -41,12 +41,17 @@ function SearchWithFilters(props) {
     const handleMlaChange = event => {        
         setMla(event.target.value);        
     };
+
+    const [query, setQuery] = useState("");
+    const handleQueryChange = event => {
+        setQuery(event.target.value);
+    };
     
     const [searchResults, setSearchResults] = useState([]);
     const handleSearch = async function () {
         const results = await getData(
             'api/GetSummaryWithFilter',
-            { ridingNumber: mla }
+            { RidingNumber: mla, Query: query }
         );
         setSearchResults(results);
         props.updateSearchResults({ results });        
@@ -60,6 +65,8 @@ function SearchWithFilters(props) {
             className={classes.root}
             id="standard-search"
             label="Search field"
+            onChange={handleQueryChange}
+            value={query}
             type="search" />
 
         <Button
