@@ -35,18 +35,18 @@ namespace PALS.Controllers
         [Route("~/api/GetSummaryWithFilter")]
         [HttpGet]
         public string GetSummaryWithFilter(string Query, int? RidingNumber, 
-                                           string StartDate, string EndDate)
+                                           string StartDate, string EndDate, string Caucus)
         {
 
             //dynamic searchFilter = JObject.Parse(inputFilter);
 
             var filter = new Filter
             {
-                  Query = Query,            
-                  RidingNumber = RidingNumber != 0 ? RidingNumber : null,            
-            //    Caucus = searchFilter.caucus,
-                  StartDate = DateTime.Parse(StartDate),
-                  EndDate = DateTime.Parse(EndDate)
+                Query = Query,
+                RidingNumber = RidingNumber != 0 ? RidingNumber : null,
+                Caucus = Parties.IsValidParty(Caucus) ? Caucus : null,
+                StartDate = DateTime.Parse(StartDate),
+                EndDate = DateTime.Parse(EndDate)
             };
 
             var result = databaseService.GetSummariesWithFilter(filter);                        

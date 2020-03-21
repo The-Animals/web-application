@@ -175,6 +175,7 @@ namespace PALS.Services
 				cmd.Parameters.AddWithValue("@ridingNumber", filter.RidingNumber);
 				cmd.Parameters.AddWithValue("@startDate", filter.StartDate);
 				cmd.Parameters.AddWithValue("@endDate", filter.EndDate);
+				cmd.Parameters.AddWithValue("@caucus", filter.Caucus);
 
 				var dataReader = cmd.ExecuteReader();
 
