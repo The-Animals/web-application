@@ -74,79 +74,91 @@ function SearchWithFilters(props) {
 
     // TODO: Replace native date pickers with material-ui/pickers
     return (
-        <div className={classes.root}>
-        <TextField 
-            fullWidth
-            className={classes.root}
-            id="standard-search"
-            label="Search field"
-            onChange={handleQueryChange}
-            value={query}
-            type="search" />
+        <div className="container">
 
-        <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSearch}
-            className={classes.button}
-            endIcon={<SearchIcon />}
-        >
-            Search
-        </Button>
+            <div className="row">
+                <div className="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" className="btn btn-primary">UCP</button>
+                    <button type="button" className="btn btn-secondary">NDP</button>
+                    <button type="button" className="btn btn-secondary">AB</button>
+                    <button type="button" className="btn btn-secondary">All</button>
+                </div>
+            </div>
 
-        <TextField
-            id="standard-select-currency"
-            select
-            label="Select"
-            value={mla}
-            onChange={handleMlaChange}
-            helperText="Please select a riding"
-        >
-            {MLAs.map(option => (
-                <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
-                    {option.riding}
-                </MenuItem>
-            ))}
-        </TextField>
+            <div className={classes.root}>
+            <TextField 
+                fullWidth
+                className={classes.root}
+                id="standard-search"
+                label="Search field"
+                onChange={handleQueryChange}
+                value={query}
+                type="search" />
 
-        <TextField
-            id="standard-select-mla"
-            select
-            label="Select"
-            value={mla}
-            onChange={handleMlaChange}
-            helperText="Please select an MLA"
-        >
-            {MLAs.map(option => (
-                <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
-                    {option.name}
-                </MenuItem>
-            ))}
-        </TextField>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSearch}
+                className={classes.button}
+                endIcon={<SearchIcon />}
+            >
+                Search
+            </Button>
 
-        <TextField
-            id="startDate"
-            label="From Date"
-            type="date"
-            defaultValue={startDate}
-            onChange={handleStartDateChange}
-            className={classes.textField}
-            InputLabelProps={{
-                shrink: true,
-            }}
-        />
+            <TextField
+                id="standard-select-currency"
+                select
+                label="Select"
+                value={mla}
+                onChange={handleMlaChange}
+                helperText="Please select a riding"
+            >
+                {MLAs.map(option => (
+                    <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
+                        {option.riding}
+                    </MenuItem>
+                ))}
+            </TextField>
 
-        <TextField
-            id="endDate"
-            label="To Date"
-            type="date"
-            defaultValue={endDate}            
-            onChange={handleEndDateChange}
-            className={classes.textField}
-            InputLabelProps={{
-                shrink: true,
-            }}
-        />
+            <TextField
+                id="standard-select-mla"
+                select
+                label="Select"
+                value={mla}
+                onChange={handleMlaChange}
+                helperText="Please select an MLA"
+            >
+                {MLAs.map(option => (
+                    <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
+                        {option.name}
+                    </MenuItem>
+                ))}
+            </TextField>
+
+            <TextField
+                id="startDate"
+                label="From Date"
+                type="date"
+                defaultValue={startDate}
+                onChange={handleStartDateChange}
+                className={classes.textField}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+            />
+
+            <TextField
+                id="endDate"
+                label="To Date"
+                type="date"
+                defaultValue={endDate}            
+                onChange={handleEndDateChange}
+                className={classes.textField}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+            />
+            </div>
 
         </div>
     );
