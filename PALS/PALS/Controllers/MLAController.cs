@@ -36,7 +36,10 @@ namespace PALS.Controllers
         [HttpGet]
         public List<MLA> GetAllMLAs()
         {
-            return databaseService.GetAllMLAs();
+            var mlas = databaseService.GetAllMLAs();
+            mlas.Insert(0, new MLA { Name = "All", RidingNumber = 0, Riding = "All" });
+
+            return mlas;
         }
 
     }
