@@ -124,16 +124,15 @@ namespace PALS.Services
             return summaries;
         }
 
-        public async Task<List<Summary>> GetCaucusSummaries(int caucus, int n)
+        public async Task<List<Summary>> GetAllSummaries(int n)
         {
             var summaries = new List<Summary>();
 
             var sql = @"SELECT *
-						FROM db.summaries_caucus_@Caucus
+						FROM db.all_summaries
 						LIMIT @N";
 
             MySqlParameter[] parameters = {
-                new MySqlParameter("@Caucus", caucus),
                 new MySqlParameter("@N", n)
             };
 
