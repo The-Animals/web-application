@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -27,6 +26,7 @@ const mapStateToProps = state => {
 const useStyles = makeStyles({
     table: {
         maxWidth: 525,
+        maxHeight: 200
     },
 });
 
@@ -46,7 +46,7 @@ function MLASummariesTable(props) {
     }, [mlaId]);
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(2);
 
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -57,15 +57,25 @@ function MLASummariesTable(props) {
       setPage(0);
     };
 
+    const StyledTableCell = withStyles(theme => ({
+      head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+      },
+      body: {
+        fontSize: 18,
+      },
+    }))(TableCell);
+
     return (
         <Paper className={classes.paper}>
           <TableContainer component={Paper}>
-              <Table className={classes.table} aria-label="simple table">
+              <Table className={classes.table} stickyHeader aria-label="sticky table">
                   <TableHead>
                       <TableRow>
-                        <TableCell align='center' colspan='2'>
+                        <StyledTableCell align='center' colspan='2'>
                           Summaries
-                        </TableCell>
+                        </StyledTableCell>
                       </TableRow>
                   </TableHead>
                   <TableBody>
