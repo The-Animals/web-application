@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PALS.Models;
 
 using PALS.Services;
 
@@ -20,23 +18,18 @@ namespace PALS.Controllers
             databaseService = new DatabaseService();
         }
 
-        [Route("~/api/GetMLA")]
         [HttpGet]
-        public async Task<MLA> MLA(int RidingID)
+        [Route("{id}")]
+        public async Task<MLA> GetMLA(int id)
         {            
-            var mla = databaseService.GetMLA(RidingID);
-
-            var minioService = new MinioService();
-            await minioService.Run("images", "Tyler_Shandro.jpg");
-
-            return mla;
+            return await databaseService.GetMLA(id);
         }
 
-        [Route("~/api/GetAllMLAs")]
         [HttpGet]
-        public List<MLA> GetAllMLAs()
+        [Route("all")]
+        public async Task<List<MLA>> GetAllMLAs()
         {
-            return databaseService.GetAllMLAs();
+            return await databaseService.GetAllMLAs();
         }
 
     }
