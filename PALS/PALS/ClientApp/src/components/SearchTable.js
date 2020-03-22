@@ -40,22 +40,17 @@ function isEmpty(obj) {
 function SearchTable(props) {
     const classes = useStyles();
 
-    const searchResults =
-        isEmpty(props.searchResults) ?
-            { results: [] } :
-            props.searchResults;
+    console.log("Here be props: ", props);
 
-    const mlaRows = Object.keys(searchResults.results).map(mlaId =>
-        <TableRow key={mlaId}>
+    const searchResults = props.searchResults;
+
+    const mlaRows = searchResults.map(result =>
+        <TableRow key={result.mlaRank}>
             <PersonTableCell component="th" scope="row">
                 <img src={MLA} width="120px" height="150px" />
             </PersonTableCell>
             <TableCell align="left">
-                <ol>
-                {searchResults.results[mlaId].map(sentence => (
-                    <li key={sentence.SummaryRank}>{sentence.Text}</li>
-                ))}
-                </ol>
+                {result.text}
             </TableCell>
         </TableRow>
     );

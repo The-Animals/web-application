@@ -1,11 +1,31 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import { Summary } from './Summary';
+import { getData } from '../services/AjaxService.js';
+import { updateSearchResults } from '../actions/index.js';
 
-export class Search extends Component {
+// TODO: Use update all summaries action instead.
+const mapDispatchToProps = dispatch => {
+    return {
+        updateSearchResults: results => dispatch(updateSearchResults(results))
+    }
+}
+
+class Search extends Component {
     static displayName = Search.name;
+
+    constructor(props) {
+        super(props);
+    }
+
+    async componentDidMount() {
+        const response = await fetch('api/Summary/all/10');
+        const results = await response.json();
+        this.props.updateSearchResults(results);               
+    }
 
     render() {
     return (
@@ -28,5 +48,9 @@ export class Search extends Component {
     );
     }
 
-
 }
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(Search);

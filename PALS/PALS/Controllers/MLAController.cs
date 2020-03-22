@@ -7,6 +7,7 @@ using PALS.Services;
 
 namespace PALS.Controllers
 {
+    // Means anything here is called by prepending "api/mla"
     [Route("api/[controller]")]
     [ApiController]
     public class MLAController : ControllerBase

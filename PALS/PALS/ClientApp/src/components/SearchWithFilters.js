@@ -31,10 +31,11 @@ function SearchWithFilters(props) {
     const classes = useStyles();
     const reloadMlas = false;
 
+    // TODO: Prefetch ALL mla data on home page.
     const [MLAs, setMLAsData] = useState([]);
     useEffect(() => {
         async function getAllMLAsData() {
-            const MLAs = await getData('api/GetAllMLAs');
+            const MLAs = await getData('api/mla/all');
             setMLAsData(MLAs);      
         }
         getAllMLAsData();        
@@ -69,18 +70,18 @@ function SearchWithFilters(props) {
 
     const [searchResults, setSearchResults] = useState([]);
     const handleSearch = async function () {
-        const results = await getData(
-            'api/GetSummaryWithFilter',
-            {
-                RidingNumber: mla,
-                Query: query,
-                StartDate: startDate,
-                EndDate: endDate,
-                Caucus: party
-            }
-        );
-        setSearchResults(results);
-        props.updateSearchResults({ results });        
+        //const results = await getData(
+        //    'api/GetSummaryWithFilter',
+        //    {
+        //        RidingNumber: mla,
+        //        Query: query,
+        //        StartDate: startDate,
+        //        EndDate: endDate,
+        //        Caucus: party
+        //    }
+        //);
+        //setSearchResults(results);
+        //props.updateSearchResults({ results });        
     } 
 
     // TODO: Replace native date pickers with material-ui/pickers
