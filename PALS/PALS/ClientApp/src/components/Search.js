@@ -19,15 +19,7 @@ export class Search extends Component {
                 </div>
 
                 <div className="row">
-
-                    <div className="col-7">
-                        <SearchTable></SearchTable>
-                    </div>
-
-                    <div className="col-5">
-                        <Summary></Summary>
-                    </div>
-
+                    <SearchTable></SearchTable>
                 </div>
 
             </div>
