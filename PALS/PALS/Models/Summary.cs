@@ -10,7 +10,16 @@ namespace PALS.Models
             MLAId = reader["MLAId"] as int? ?? -1;
             MLARank = reader["MLARank"] as int? ?? -1;
             PartyRank = reader["PartyRank"] as int? ?? -1;
-            DocumentDate = reader["Date"] as DateTime? ?? default(DateTime);
+
+            if (DateTime.TryParse((string)reader["Date"], out var parsedDate))
+            {
+                DocumentDate = parsedDate;
+            } 
+            else
+            {
+                DocumentDate = default(DateTime);
+            }                  
+            
             DocumentUrl = reader["Url"] as string ?? default(string);
         }
 

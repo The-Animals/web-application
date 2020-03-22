@@ -4,13 +4,11 @@ import { connect } from "react-redux";
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import { getData } from '../services/AjaxService.js';
-import { updateSearchResults } from '../actions/index.js';
+import { updateSummaries } from '../actions/index.js';
 
-// TODO: Use update all summaries action instead.
 const mapDispatchToProps = dispatch => {
     return {
-        updateSearchResults: results => dispatch(updateSearchResults(results))
+        updateSummaries: results => dispatch(updateSummaries(results))
     }
 }
 
@@ -21,10 +19,11 @@ class Search extends Component {
         super(props);
     }
 
+    // TODO: Increase limit before creating PR.
     async componentDidMount() {
         const response = await fetch('api/Summary/all/10');
         const results = await response.json();
-        this.props.updateSearchResults(results);               
+        this.props.updateSummaries(results);               
     }
 
     render() {

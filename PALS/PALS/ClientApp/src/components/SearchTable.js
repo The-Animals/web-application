@@ -13,7 +13,10 @@ import Paper from '@material-ui/core/Paper';
 import MLA from '../shared/carson.jpg';
 
 const mapStateToProps = state => {
-    return { searchResults: state.searchResults };
+    return {
+        summaries: state.summaries,
+        summaryFilter: state.summaryFilter
+    };
 };
 
 const PersonTableCell = withStyles(theme => ({
@@ -33,8 +36,44 @@ const useStyles = makeStyles({
     },
 });
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
+const generateKey = (result) => {
+    return result.mlaRank + '_' + result.mlaId;
+};
+
+function processSummaryFilter(filter, summaries) {
+    return summaries.filter(function (summary) {
+
+        // Sort mlaIds
+        if (filter.mlaId &&
+            (filter.mlaId != summary.mlaId)) return false;
+
+        // TODO: This will have to change to use MLAIds to find
+        // their caucuses and compare if they match. After we
+        // implement prefetching MLAs.
+
+        // Sort caucus
+        if (filter.caucus &&
+            (filter.caucus != summary.caucus)) return false;
+
+        // Sort dates
+        const summaryDate = new Date(summary.documentDate);
+        if (filter.startDate) {
+            const startDate = new Date(filter.startDate);
+            if (summaryDate < startDate) return false;
+        }
+
+        if (filter.endDate) {
+            const endDate = new Date(filter.endDate);
+            if (summaryDate > endDate) return false;
+        }
+
+        // Sort query
+        if (filter.query &&
+            (!summary.text.includes(filter.query))) return false;
+
+        return true;
+
+    });    
 }
 
 function SearchTable(props) {
@@ -42,10 +81,11 @@ function SearchTable(props) {
 
     console.log("Here be props: ", props);
 
-    const searchResults = props.searchResults;
+    const summaries = props.summaries;
+    const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
 
-    const mlaRows = searchResults.map(result =>
-        <TableRow key={result.mlaRank}>
+    const mlaRows = filteredSummaries.map(result =>
+        <TableRow key={generateKey(result)}>
             <PersonTableCell component="th" scope="row">
                 <img src={MLA} width="120px" height="150px" />
             </PersonTableCell>
