@@ -5,25 +5,36 @@ import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
 import { updateSummaries } from '../actions/index.js';
+import { updateMlas } from '../actions/index.js';
+
+const mapStateToProps = state => {
+    return {
+        mlas: state.mlas
+    };
+};
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateSummaries: results => dispatch(updateSummaries(results))
+        updateSummaries: results => dispatch(updateSummaries(results)),
+        updateMlas: mlas => dispatch(updateMlas(mlas))
     }
 }
 
 class Search extends Component {
     static displayName = Search.name;
 
-    constructor(props) {
-        super(props);
-    }
-
     // TODO: Increase limit before creating PR.
     async componentDidMount() {
-        const response = await fetch('api/Summary/all/10');
-        const results = await response.json();
-        this.props.updateSummaries(results);               
+        const responseSummaries = await fetch('api/Summary/all/10');
+        const resultsSummaries = await responseSummaries.json();
+        this.props.updateSummaries(resultsSummaries);
+
+        // Fetch mlas if not already loaded.
+        if (this.props.mlas.length == 0) {
+            const responseMlas = await fetch('api/mla/all');
+            const resultMlas = await responseMlas.json();
+            this.props.updateMlas(resultMlas);   
+        }
     }
 
     render() {
@@ -50,6 +61,6 @@ class Search extends Component {
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(Search);

@@ -9,13 +9,17 @@ import SearchIcon from '@material-ui/icons/Search';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-import { getData } from '../services/AjaxService.js';
-
 import { updateSummaryFilter } from '../actions/index.js';
+
+const mapStateToProps = state => {
+    return {
+        mlas: state.mlas
+    };
+};
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateSummaryFilter: filter => dispatch(updateSummaryFilter(filter))
+        updateSummaryFilter: filter => dispatch(updateSummaryFilter(filter))        
     }
 }
 
@@ -29,17 +33,6 @@ const useStyles = makeStyles(theme => ({
 
 function SearchWithFilters(props) {
     const classes = useStyles();
-    const reloadMlas = false;
-
-    // TODO: Prefetch ALL mla data on home page.
-    const [MLAs, setMLAsData] = useState([]);
-    useEffect(() => {
-        async function getAllMLAsData() {
-            const MLAs = await getData('api/mla/all');
-            setMLAsData(MLAs);      
-        }
-        getAllMLAsData();        
-    }, [reloadMlas]); // Avoid spamming server to reload MLAs
     
     const [mla, setMla] = useState(0);
     const handleMlaChange = event => {        
@@ -118,15 +111,15 @@ function SearchWithFilters(props) {
             </Button>
 
             <TextField
-                id="standard-select-currency"
+                id="standard-select-riding"
                 select
                 label="Select"
                 value={mla}
                 onChange={handleMlaChange}
                 helperText="Please select a riding"
             >
-                {MLAs.map(option => (
-                    <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
+                {props.mlas.map(option => (
+                    <MenuItem key={option.id} value={option.id}>
                         {option.riding}
                     </MenuItem>
                 ))}
@@ -140,8 +133,8 @@ function SearchWithFilters(props) {
                 onChange={handleMlaChange}
                 helperText="Please select an MLA"
             >
-                {MLAs.map(option => (
-                    <MenuItem key={option.ridingNumber} value={option.ridingNumber}>
+                {props.mlas.map(option => (
+                    <MenuItem key={option.id} value={option.id}>
                         {option.name}
                     </MenuItem>
                 ))}
@@ -177,4 +170,6 @@ function SearchWithFilters(props) {
 
 }
 
-export default connect(null, mapDispatchToProps)(SearchWithFilters);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps)(SearchWithFilters);

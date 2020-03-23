@@ -1,5 +1,6 @@
 ﻿import { VIEW_MLA } from "../constants/action-types.js";
 import { UPDATE_SUMMARY_FILTER } from "../constants/action-types.js";
+import { UPDATE_ALL_MLAS } from "../constants/action-types.js";
 import { UPDATE_ALL_SUMMARIES } from "../constants/action-types.js";
 
 export function viewMLA(mlaId) {
@@ -12,4 +13,8 @@ export function updateSummaryFilter(filter) {
 
 export function updateSummaries(summaries) {
     return { type: UPDATE_ALL_SUMMARIES, summaries }
+};
+
+export function updateMlas(mlas) {
+    return { type: UPDATE_ALL_MLAS, mlas }
 }
