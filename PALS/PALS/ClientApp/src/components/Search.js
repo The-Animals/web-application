@@ -20,21 +20,43 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
+function mapMlasToObject(mlas) {
+
+    return mlas.reduce(function (map, obj) {
+        map[obj.id] = obj;
+        return map;
+    }, {});
+
+}
+
+function mapMlaPartyToSummaries(mlas, summaries) {
+
+    return summaries.map(function (summary) {
+        var newSummary = Object.assign({}, summary);
+        newSummary.caucus = mlas[summary.mlaId].party;
+        return newSummary;
+    });
+
+}
+
 class Search extends Component {
     static displayName = Search.name;
 
-    // TODO: Increase limit before creating PR.
     async componentDidMount() {
-        const responseSummaries = await fetch('api/Summary/all/10');
-        const resultsSummaries = await responseSummaries.json();
-        this.props.updateSummaries(resultsSummaries);
+        const responseSummaries = await fetch('api/Summary/all/1000');
+        var resultsSummaries = await responseSummaries.json();        
 
         // Fetch mlas if not already loaded.
         if (this.props.mlas.length == 0) {
             const responseMlas = await fetch('api/mla/all');
-            const resultMlas = await responseMlas.json();
+            const resultMlas = await responseMlas.json();            
             this.props.updateMlas(resultMlas);   
         }
+
+        var mlas = mapMlasToObject(this.props.mlas);
+        resultsSummaries = mapMlaPartyToSummaries(mlas, resultsSummaries)
+
+        this.props.updateSummaries(resultsSummaries);
     }
 
     render() {

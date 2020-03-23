@@ -15,7 +15,7 @@ import MLA from '../shared/carson.jpg';
 const mapStateToProps = state => {
     return {
         summaries: state.summaries,
-        summaryFilter: state.summaryFilter
+        summaryFilter: state.summaryFilter,
     };
 };
 
@@ -46,10 +46,6 @@ function processSummaryFilter(filter, summaries) {
         // Sort mlaIds
         if (filter.mlaId &&
             (filter.mlaId != summary.mlaId)) return false;
-
-        // TODO: This will have to change to use MLAIds to find
-        // their caucuses and compare if they match. After we
-        // implement prefetching MLAs.
 
         // Sort caucus
         if (filter.caucus &&
