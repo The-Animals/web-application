@@ -1,11 +1,63 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import { Summary } from './Summary';
+import { updateSummaries } from '../actions/index.js';
+import { updateMlas } from '../actions/index.js';
 
-export class Search extends Component {
+const mapStateToProps = state => {
+    return {
+        mlas: state.mlas
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateSummaries: results => dispatch(updateSummaries(results)),
+        updateMlas: mlas => dispatch(updateMlas(mlas))
+    }
+}
+
+function mapMlasToObject(mlas) {
+
+    return mlas.reduce(function (map, obj) {
+        map[obj.id] = obj;
+        return map;
+    }, {});
+
+}
+
+function mapMlaPartyToSummaries(mlas, summaries) {
+
+    return summaries.map(function (summary) {
+        var newSummary = Object.assign({}, summary);
+        newSummary.caucus = mlas[summary.mlaId].party;
+        return newSummary;
+    });
+
+}
+
+class Search extends Component {
     static displayName = Search.name;
+
+    async componentDidMount() {
+        const responseSummaries = await fetch('api/Summary/all/1000');
+        var resultsSummaries = await responseSummaries.json();        
+
+        // Fetch mlas if not already loaded.
+        if (this.props.mlas.length == 0) {
+            const responseMlas = await fetch('api/mla/all');
+            const resultMlas = await responseMlas.json();            
+            this.props.updateMlas(resultMlas);   
+        }
+
+        var mlas = mapMlasToObject(this.props.mlas);
+        resultsSummaries = mapMlaPartyToSummaries(mlas, resultsSummaries)
+
+        this.props.updateSummaries(resultsSummaries);
+    }
 
     render() {
     return (
@@ -15,28 +67,11 @@ export class Search extends Component {
             <div className="container">
 
                 <div className="row">
-                    <div className="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" className="btn btn-primary">UCP</button>
-                        <button type="button" className="btn btn-secondary">NDP</button>
-                        <button type="button" className="btn btn-secondary">AB</button>
-                        <button type="button" className="btn btn-secondary">All</button>
-                    </div>
-                </div>
-
-                <div className="row">
                     <SearchWithFilters></SearchWithFilters>
                 </div>
 
                 <div className="row">
-
-                    <div className="col-7">
-                        <SearchTable></SearchTable>
-                    </div>
-
-                    <div className="col-5">
-                        <Summary></Summary>
-                    </div>
-
+                    <SearchTable></SearchTable>
                 </div>
 
             </div>
@@ -45,5 +80,9 @@ export class Search extends Component {
     );
     }
 
-
 }
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Search);

@@ -45,7 +45,7 @@ namespace PALS.Services
             this.connection = new MySqlConnection(csb.ConnectionString);
         }
 
-        // Set the connection, command, and then execute the command with query and return the reader.  
+        // Set the connection, command, and then execute the command with query and return the reader.
         public async Task<DbDataReader> ExecuteAsync(String commandText,
             MySqlParameter[] parameters = null, CommandType commandType = CommandType.Text)
         {
@@ -57,8 +57,8 @@ namespace PALS.Services
                 if (parameters != null) cmd.Parameters.AddRange(parameters);
 
                 this.connection.Open();
-                // When using CommandBehavior.CloseConnection, the connection will be closed when the   
-                // IDataReader is closed.  
+                // When using CommandBehavior.CloseConnection, the connection will be closed when the
+                // IDataReader is closed.
                 return await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection);
             }
         }
@@ -69,8 +69,8 @@ namespace PALS.Services
         public async Task<MLA> GetMLA(int ridingNumber)
         {
             var sql = @"SELECT *
-					  FROM db.mlas 
-					  WHERE RidingNumber = @RidingNumber 
+					  FROM db.mlas
+					  WHERE RidingNumber = @RidingNumber
 					  LIMIT 1";
 
             MySqlParameter[] parameters = { new MySqlParameter("@RidingNumber", ridingNumber) };

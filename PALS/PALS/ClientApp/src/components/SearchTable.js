@@ -13,7 +13,10 @@ import Paper from '@material-ui/core/Paper';
 import MLA from '../shared/carson.jpg';
 
 const mapStateToProps = state => {
-    return { searchResults: state.searchResults };
+    return {
+        summaries: state.summaries,
+        summaryFilter: state.summaryFilter,
+    };
 };
 
 const PersonTableCell = withStyles(theme => ({
@@ -33,29 +36,59 @@ const useStyles = makeStyles({
     },
 });
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
+const generateKey = (result) => {
+    return result.mlaRank + '_' + result.mlaId;
+};
+
+function processSummaryFilter(filter, summaries) {
+    return summaries.filter(function (summary) {
+
+        // Sort mlaIds
+        if (filter.mlaId &&
+            (filter.mlaId != summary.mlaId)) return false;
+
+        // Sort caucus
+        if (filter.caucus &&
+            (filter.caucus != "ALL" &&
+             filter.caucus != summary.caucus)) return false;
+
+        // Sort dates
+        const summaryDate = new Date(summary.documentDate);
+        if (filter.startDate) {
+            const startDate = new Date(filter.startDate);
+            if (summaryDate < startDate) return false;
+        }
+
+        if (filter.endDate) {
+            const endDate = new Date(filter.endDate);
+            if (summaryDate > endDate) return false;
+        }
+
+        // Sort query
+        if (filter.query) {
+            const query = filter.query.toLowerCase();
+            const summaryText = summary.text.toLowerCase();
+            if (!summaryText.includes(query)) return false;
+        }            
+
+        return true;
+
+    });    
 }
 
 function SearchTable(props) {
     const classes = useStyles();
 
-    const searchResults =
-        isEmpty(props.searchResults) ?
-            { results: [] } :
-            props.searchResults;
+    const summaries = props.summaries;
+    const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
 
-    const mlaRows = Object.keys(searchResults.results).map(mlaId =>
-        <TableRow key={mlaId}>
+    const mlaRows = filteredSummaries.map(result =>
+        <TableRow key={generateKey(result)}>
             <PersonTableCell component="th" scope="row">
                 <img src={MLA} width="120px" height="150px" />
             </PersonTableCell>
             <TableCell align="left">
-                <ol>
-                {searchResults.results[mlaId].map(sentence => (
-                    <li key={sentence.SummaryRank}>{sentence.Text}</li>
-                ))}
-                </ol>
+                {result.text}
             </TableCell>
         </TableRow>
     );

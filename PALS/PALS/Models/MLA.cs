@@ -17,6 +17,8 @@ namespace PALS.Models
             Party = reader["Caucus"] as string ?? default(string);
         }
 
+        public MLA() { }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
