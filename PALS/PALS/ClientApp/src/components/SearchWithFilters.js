@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
@@ -37,36 +35,35 @@ function SearchWithFilters(props) {
     const [mla, setMla] = useState(0);
     const handleMlaChange = event => {        
         setMla(event.target.value);
-        handleSearch();
     };
 
     const [query, setQuery] = useState("");
     const handleQueryChange = event => {
         setQuery(event.target.value);
-        handleSearch();
     };
 
     const [startDate, setStartDate] = useState("2019-01-01");
     const handleStartDateChange = event => {
         setStartDate(event.target.value);
-        handleSearch();
     };
 
     const [endDate, setEndDate] = useState("2020-04-01");
     const handleEndDateChange = event => {
         setEndDate(event.target.value);
-        handleSearch();
     };
 
     const [party, setParty] = useState("ALL");
     const handlePartyChange = (event, newParty) => {
         if (newParty !== null) {
-            setParty(newParty);
-            handleSearch();
+            setParty(newParty);            
         }
     };
 
-    const handleSearch = async function () {
+    useEffect(() => {
+        handleSearch();
+    }, [query, mla, party, startDate, endDate]);
+
+    const handleSearch = function () {
         props.updateSummaryFilter({
             mlaId: mla,
             caucus: party,
