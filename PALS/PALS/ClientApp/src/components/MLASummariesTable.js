@@ -25,9 +25,15 @@ const mapStateToProps = state => {
 
 const useStyles = makeStyles({
     table: {
-        maxWidth: 525,
-        maxHeight: 200,
+        width: 'auto',
+        height: '100%',
     },
+    paper: {
+        height: '100%'
+    },
+    container: {
+        height: '82%'
+    }
 });
 
 function MLASummariesTable(props) {
@@ -69,17 +75,7 @@ function MLASummariesTable(props) {
 
     return (
         <Paper className={classes.paper}>
-          <TablePagination
-            rowsPerPageOptions={[1, 2, 3, 4, 5]}
-            component="div"
-            count={MLASummaries.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            className = {classes.pagination}
-          />
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} className={classes.container}>
               <Table className={classes.table} stickyHeader aria-label="sticky table">
                   <TableHead>
                   </TableHead>
@@ -97,6 +93,17 @@ function MLASummariesTable(props) {
                   </TableBody>
               </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[1, 2, 3, 4, 5]}
+            component="div"
+            count={MLASummaries.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            className = {classes.pagination}
+            height="18%"
+          />
         </Paper>
     );
 }

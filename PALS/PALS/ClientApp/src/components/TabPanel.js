@@ -34,17 +34,26 @@ function TabPanel(props) {
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && <Box p={0}>{children}</Box>}
+      {value === index && <Box p={0} height={"100%"}>{children}</Box>}
     </Typography>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: "100%",
-    minHeight: 400
-  },
+    root: {
+      height: "100%"
+    },
+    bar: {
+      height: "15%"
+    },
+    panel: {
+      height: "85%",
+      width: "100%"
+    },
+    profile: {
+      height: "100%",
+      width: "100%"
+    },
 }));
 
 export default function FullWidthTabs() {
@@ -62,7 +71,7 @@ export default function FullWidthTabs() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" className={classes.bar}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -70,17 +79,18 @@ export default function FullWidthTabs() {
           textColor="primary"
           variant="fullWidth"
           aria-label="full width tabs example"
+          height="100%"
         >
           <Tab label="MLA Info" {...createDynamicProps(0)} />
           <Tab label="Summaries" {...createDynamicProps(1)} />
         </Tabs>
       </AppBar>
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <MLAProfileCard />
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <MLASummariesTable />
-        </TabPanel>
+      <TabPanel value={value} index={0} dir={theme.direction} className={classes.panel}>
+        <MLAProfileCard />
+      </TabPanel>
+      <TabPanel value={value} index={1} dir={theme.direction} className={classes.panel}>
+        <MLASummariesTable />
+      </TabPanel>
     </div>
   );
 }

@@ -22,7 +22,7 @@ class MapBox extends Component {
             zoom: 4.08,
             props: props
         };
-        this.hoveredStateId = null;        
+        this.hoveredStateId = null;
     }
 
     componentDidMount() {
@@ -107,9 +107,9 @@ class MapBox extends Component {
                 if (this.hoveredStateId) {
 
                     const mlaId = e.features[0].properties.EDNumber20;
-                    self.props.viewMLA({ mlaId });     
-                    
-                }                
+                    self.props.viewMLA({ mlaId });
+
+                }
             });
 
         });
@@ -141,15 +141,15 @@ export class Home extends Component {
 
     render() {
     return (
-        <div>
-            <div className="container">
-                <div className="row">
+        <div style={{height: '100%'}}>
+            <div className="container" style={{height: '100%'}}>
+                <div className="row" style={{height: '100%'}}>
 
-                    <div className="col-sm">
+                    <div className="col-sm" style={{height: '100%'}}>
 
                     </div>
 
-                    <div className="col-sm">
+                    <div className="col-sm" style={{height: '100%'}}>
                         <Summary></Summary>
                     </div>
 
@@ -165,4 +165,3 @@ const Map = connect(
     mapDispatchToProps
 )(MapBox);
 export default Map;
-
