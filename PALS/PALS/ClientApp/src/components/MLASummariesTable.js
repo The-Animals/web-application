@@ -26,7 +26,7 @@ const mapStateToProps = state => {
 const useStyles = makeStyles({
     table: {
         maxWidth: 525,
-        maxHeight: 200
+        maxHeight: 200,
     },
 });
 
@@ -69,18 +69,23 @@ function MLASummariesTable(props) {
 
     return (
         <Paper className={classes.paper}>
+          <TablePagination
+            rowsPerPageOptions={[1, 2, 3, 4, 5]}
+            component="div"
+            count={MLASummaries.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            className = {classes.pagination}
+          />
           <TableContainer component={Paper}>
               <Table className={classes.table} stickyHeader aria-label="sticky table">
                   <TableHead>
-                      <TableRow>
-                        <StyledTableCell align='center' colspan='2'>
-                          Summaries
-                        </StyledTableCell>
-                      </TableRow>
                   </TableHead>
                   <TableBody>
                       {MLASummaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-                          <TableRow key={row.mlaRank}>
+                          <TableRow key={row.mlaRank} className={classes.row}>
                               <TableCell align="left">
                                   {row.mlaRank}
                               </TableCell>
@@ -92,15 +97,6 @@ function MLASummariesTable(props) {
                   </TableBody>
               </Table>
           </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[1, 2, 3, 4, 5]}
-            component="div"
-            count={MLASummaries.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
         </Paper>
     );
 }

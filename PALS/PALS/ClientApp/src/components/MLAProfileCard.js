@@ -21,6 +21,9 @@ const mapStateToProps = state => {
 const useStyles = makeStyles({
     root: {
         minWidth: 525,
+        minHeight: 400,
+        width: 'auto',
+        height: 'auto',
         display: 'flex',
     },
     details: {
