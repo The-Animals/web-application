@@ -36,28 +36,33 @@ function SearchWithFilters(props) {
     
     const [mla, setMla] = useState(0);
     const handleMlaChange = event => {        
-        setMla(event.target.value);        
+        setMla(event.target.value);
+        handleSearch();
     };
 
     const [query, setQuery] = useState("");
     const handleQueryChange = event => {
         setQuery(event.target.value);
+        handleSearch();
     };
 
     const [startDate, setStartDate] = useState("2019-01-01");
     const handleStartDateChange = event => {
         setStartDate(event.target.value);
+        handleSearch();
     };
 
     const [endDate, setEndDate] = useState("2020-04-01");
     const handleEndDateChange = event => {
         setEndDate(event.target.value);
+        handleSearch();
     };
 
     const [party, setParty] = useState("ALL");
     const handlePartyChange = (event, newParty) => {
         if (newParty !== null) {
             setParty(newParty);
+            handleSearch();
         }
     };
 
@@ -82,33 +87,19 @@ function SearchWithFilters(props) {
                 <ToggleButton key={2} value="UCP">
                     UCP
                 </ToggleButton>
-                <ToggleButton key={3} value="AB">
-                    AB
-                </ToggleButton>
-                <ToggleButton key={4} value="ALL">
+                <ToggleButton key={3} value="ALL">
                     All
                 </ToggleButton>
             </ToggleButtonGroup>
 
             <div className={classes.root}>
-            <TextField 
-                fullWidth
+            <TextField                 
                 className={classes.root}
                 id="standard-search"
                 label="Search field"
                 onChange={handleQueryChange}
                 value={query}
                 type="search" />
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSearch}
-                className={classes.button}
-                endIcon={<SearchIcon />}
-            >
-                Search
-            </Button>
 
             <TextField
                 id="standard-select-riding"
