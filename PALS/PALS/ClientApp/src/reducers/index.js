@@ -10,6 +10,7 @@ const initialState = {
     summaryFilter:
     {
         mlaId: 0,
+        caucus: "",
         startDate: new Date("2015-05-21T13:30:00"),
         endDate: new Date("2020-05-21T13:30:00"),
         query: "",
@@ -26,7 +27,7 @@ function rootReducer(state = initialState, action) {
         case UPDATE_ALL_SUMMARIES:
             return { ...state, summaries: action.summaries }
         case UPDATE_SUMMARY_FILTER:
-            return { ...state, summaryFilter: action.summaryFilter }
+            return { ...state, summaryFilter: action.filter }
         default:
             return state;
     }

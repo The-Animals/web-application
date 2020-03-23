@@ -11,11 +11,11 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { getData } from '../services/AjaxService.js';
 
-import { updateSearchResults } from '../actions/index.js';
+import { updateSummaryFilter } from '../actions/index.js';
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateSearchResults: results => dispatch(updateSearchResults(results))
+        updateSummaryFilter: filter => dispatch(updateSummaryFilter(filter))
     }
 }
 
@@ -68,20 +68,14 @@ function SearchWithFilters(props) {
         }
     };
 
-    const [searchResults, setSearchResults] = useState([]);
     const handleSearch = async function () {
-        //const results = await getData(
-        //    'api/GetSummaryWithFilter',
-        //    {
-        //        RidingNumber: mla,
-        //        Query: query,
-        //        StartDate: startDate,
-        //        EndDate: endDate,
-        //        Caucus: party
-        //    }
-        //);
-        //setSearchResults(results);
-        //props.updateSearchResults({ results });        
+        props.updateSummaryFilter({
+            mlaId: mla,
+            caucus: party,
+            startDate: startDate,
+            endDate: endDate,
+            query: query,
+        });   
     } 
 
     // TODO: Replace native date pickers with material-ui/pickers

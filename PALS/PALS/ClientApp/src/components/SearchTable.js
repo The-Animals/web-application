@@ -53,7 +53,8 @@ function processSummaryFilter(filter, summaries) {
 
         // Sort caucus
         if (filter.caucus &&
-            (filter.caucus != summary.caucus)) return false;
+            (filter.caucus != "ALL" &&
+             filter.caucus != summary.caucus)) return false;
 
         // Sort dates
         const summaryDate = new Date(summary.documentDate);
@@ -68,8 +69,11 @@ function processSummaryFilter(filter, summaries) {
         }
 
         // Sort query
-        if (filter.query &&
-            (!summary.text.includes(filter.query))) return false;
+        if (filter.query) {
+            const query = filter.query.toLowerCase();
+            const summaryText = summary.text.toLowerCase();
+            if (!summaryText.includes(query)) return false;
+        }            
 
         return true;
 
@@ -78,8 +82,6 @@ function processSummaryFilter(filter, summaries) {
 
 function SearchTable(props) {
     const classes = useStyles();
-
-    console.log("Here be props: ", props);
 
     const summaries = props.summaries;
     const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
