@@ -109,7 +109,8 @@ function stableSort(array, comparator) {
 
 const headCells = [
     { id: 'person', sortable: false, alignRight: false, disablePadding: false, label: 'Person' },
-    { id: 'mlaRank', sortable: true, alignRight: false, disablePadding: false, label: 'Rank' },
+    { id: 'mlaRank', sortable: true, alignRight: false, disablePadding: false, label: 'MLA Rank' },
+    { id: 'partyRank', sortable: true, alignRight: false, disablePadding: false, label: 'Party Rank' },
     { id: 'documentDate', sortable: true, alignRight: false, disablePadding: false, label: 'Date' },
     { id: 'summary', sortable: false, alignRight: false, disablePadding: false, label: 'Summary' },    
 ];
@@ -232,6 +233,9 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
                 </PersonTableCell>
                 <TableCell>
                     {result.mlaRank}
+                </TableCell>
+                <TableCell>
+                    {result.partyRank}
                 </TableCell>
                 <TableCell>
                     {new Date(result.documentDate).toLocaleDateString('en-US')}
