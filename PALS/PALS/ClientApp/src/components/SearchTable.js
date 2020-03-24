@@ -17,7 +17,8 @@ import { updateSummaryOffset } from '../actions';
 const mapStateToProps = state => {
     return {
         summaries: state.summaries,
-        summaryFilter: state.summaryFilter        
+        summaryFilter: state.summaryFilter,
+        loading: state.loading
     };
 };
 
@@ -84,6 +85,42 @@ function processSummaryFilter(filter, summaries) {
     });    
 }
 
+function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd) {
+
+    if (loading) {
+        return (
+            <TableRow>
+                <TableCell align="left">
+                    {"Loading..."}
+                </TableCell>
+            </TableRow>
+        );
+    }
+
+    if (filteredSummaries.length == 0) {
+        return (
+            <TableRow>
+                <TableCell align="left">
+                    {"No results found."}
+                </TableCell>
+            </TableRow>
+        );
+    }
+
+    return filteredSummaries
+        .slice(sliceStart, sliceEnd)
+        .map(result =>
+            <TableRow key={generateKey(result)}>
+                <PersonTableCell component="th" scope="row">
+                    <img src={MLA} width="120px" height="150px" />
+                </PersonTableCell>
+                <TableCell align="left">
+                    {result.text}
+                </TableCell>
+            </TableRow>
+        );
+}
+
 function SearchTable(props) {
     const classes = useStyles();
 
@@ -91,7 +128,8 @@ function SearchTable(props) {
     const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
 
     if (summaries.length > 0 &&
-        filteredSummaries.length == 0) {
+        filteredSummaries.length == 0 &&
+        !props.loading) {
 
         props.updateSummaryOffset(1001);        
     }        
@@ -107,18 +145,11 @@ function SearchTable(props) {
         setPage(0);
     };
 
-    const mlaRows = filteredSummaries
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map(result =>
-        <TableRow key={generateKey(result)}>
-            <PersonTableCell component="th" scope="row">
-                <img src={MLA} width="120px" height="150px" />
-            </PersonTableCell>
-            <TableCell align="left">
-                {result.text}
-            </TableCell>
-        </TableRow>
-    );
+    const mlaRows = generateMlaRows(
+        filteredSummaries,
+        props.loading,
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage);
 
     return (
         <Paper>

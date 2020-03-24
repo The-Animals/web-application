@@ -10,6 +10,8 @@ import {
     FETCH_SUMMARIES_FAILURE
 } from "../constants/fetch-action-types.js";
 
+const MAX_SUMMARY_LIMIT = 10000;
+
 const initialState = {
     mlas: [],
     mla: {},
@@ -39,7 +41,7 @@ function rootReducer(state = initialState, action) {
         case UPDATE_SUMMARY_FILTER:
             return { ...state, summaryFilter: action.filter }
         case UPDATE_SUMMARY_OFFSET:
-            if (state.summaryOffset < 10000) {
+            if (state.summaryOffset < MAX_SUMMARY_LIMIT) {
                 return { ...state, summaryOffset: state.summaryOffset + action.offset }
             } else {
                 return { ...state, summaryOffset: state.summaryOffset }

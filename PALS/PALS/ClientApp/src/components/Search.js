@@ -11,7 +11,7 @@ import { fetchSummaries } from '../actions/fetchActions';
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
-        summaryOffset: state.summaryOffset
+        summaryOffset: state.summaryOffset,       
     };
 };
 
