@@ -145,7 +145,7 @@ function EnhancedTableHead(props) {
                             </TableSortLabel>
                         </TableCell>
                         :
-                        <TableCell>
+                        <TableCell key={headCell.id}>
                             {headCell.label}
                         </TableCell>                                        
                 ))}

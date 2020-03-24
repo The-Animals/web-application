@@ -23,22 +23,23 @@ const mapDispatchToProps = dispatch => {
     };
 }
 
-async function fetchMlas(props) {
-
-    // Fetch mlas if not already loaded.
-    if (props.mlas.length == 0) {
-        const responseMlas = await fetch('api/mla/all');
-        const resultMlas = await responseMlas.json();
-        props.updateMlas(resultMlas);        
-    }
-
+async function fetchMlas(props) {        
+    const responseMlas = await fetch('api/mla/all');
+    const resultMlas = await responseMlas.json();
+    props.updateMlas(resultMlas);            
 }
 
 class Search extends Component {
     static displayName = Search.name;
 
-    async componentDidMount() {        
-        await fetchMlas(this.props);       
+    async componentDidMount() {    
+
+        // Fetch mlas if not already loaded.
+        if (this.props.mlas.length == 0) {
+            await fetchMlas(this.props);
+        } else {            
+            this.props.fetchSummaries();
+        }
     }
 
     async componentDidUpdate() {        
