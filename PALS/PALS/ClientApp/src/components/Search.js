@@ -35,7 +35,7 @@ class Search extends Component {
     async componentDidMount() {    
 
         // Fetch mlas if not already loaded.
-        if (this.props.mlas.length == 0) {
+        if (this.props.mlas.length === 0) {
             await fetchMlas(this.props);
         } else {            
             this.props.fetchSummaries();

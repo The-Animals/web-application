@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -170,12 +170,12 @@ function processSummaryFilter(filter, summaries) {
 
         // Sort mlaIds
         if (filter.mlaId &&
-            (filter.mlaId != summary.mlaId)) return false;
+            (filter.mlaId !== summary.mlaId)) return false;
 
         // Sort caucus
         if (filter.caucus &&
-            (filter.caucus != "ALL" &&
-             filter.caucus != summary.caucus)) return false;
+            (filter.caucus !== "ALL" &&
+             filter.caucus !== summary.caucus)) return false;
 
         // Sort dates
         const summaryDate = new Date(summary.documentDate);
@@ -213,7 +213,7 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
         );
     }
 
-    if (filteredSummaries.length == 0) {
+    if (filteredSummaries.length === 0) {
         return (
             <TableRow>
                 <TableCell align="left">
@@ -228,7 +228,7 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
         .map(result =>
             <TableRow key={generateKey(result)}>
                 <PersonTableCell component="th" scope="row">
-                    <img src={MLA} width="120px" height="150px" />
+                    <img src={MLA} alt={result.name} width="120px" height="150px" />
                 </PersonTableCell>
                 <TableCell>
                     {result.mlaRank}
@@ -260,7 +260,7 @@ function SearchTable(props) {
     const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
 
     if (summaries.length > 0 &&
-        filteredSummaries.length == 0 &&
+        filteredSummaries.length === 0 &&
         !props.loading) {
 
         props.updateSummaryOffset(1001);        
