@@ -4,6 +4,12 @@ import { UPDATE_ALL_SUMMARIES } from "../constants/action-types.js";
 import { UPDATE_ALL_MLAS } from "../constants/action-types.js";
 import { UPDATE_SUMMARY_OFFSET } from "../constants/action-types.js";
 
+import {
+    FETCH_SUMMARIES_BEGIN,
+    FETCH_SUMMARIES_SUCCESS,
+    FETCH_SUMMARIES_FAILURE
+} from "../constants/fetch-action-types.js";
+
 const initialState = {
     mlas: [],
     mla: {},
@@ -16,7 +22,9 @@ const initialState = {
         endDate: new Date("2020-05-21T13:30:00"),
         query: "",
     },
-    summaryOffset: 0
+    summaryOffset: 0,
+    loading: false,
+    error: null
 };
 
 function rootReducer(state = initialState, action) {
@@ -35,7 +43,13 @@ function rootReducer(state = initialState, action) {
                 return { ...state, summaryOffset: state.summaryOffset + action.offset }
             } else {
                 return { ...state, summaryOffset: state.summaryOffset }
-            }            
+            }
+        case FETCH_SUMMARIES_BEGIN:
+            return { ...state, loading: true, error: null };
+        case FETCH_SUMMARIES_SUCCESS:
+            return { ...state, loading: false };
+        case FETCH_SUMMARIES_FAILURE:
+            return { ...state, loading: false, error: action.payload.error };
         default:
             return state;
     }

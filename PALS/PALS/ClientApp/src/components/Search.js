@@ -6,6 +6,7 @@ import SearchWithFilters from './SearchWithFilters';
 
 import { updateSummaries } from '../actions/index.js';
 import { updateMlas } from '../actions/index.js';
+import { fetchSummaries } from '../actions/index.js';
 
 const mapStateToProps = state => {
     return {
@@ -17,56 +18,31 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         updateSummaries: results => dispatch(updateSummaries(results)),
-        updateMlas: mlas => dispatch(updateMlas(mlas))
-    }
+        updateMlas: mlas => dispatch(updateMlas(mlas)),
+        fetchSummaries: () => dispatch(fetchSummaries())
+    };
 }
 
-function mapMlasToObject(mlas) {
-
-    return mlas.reduce(function (map, obj) {
-        map[obj.id] = obj;
-        return map;
-    }, {});
-
-}
-
-function mapMlaPartyToSummaries(mlas, summaries) {
-
-    return summaries.map(function (summary) {
-        var newSummary = Object.assign({}, summary);
-        newSummary.caucus = mlas[summary.mlaId].party;
-        return newSummary;
-    });
-
-}
-
-async function fetchSummaries(props, summaryOffset) {
-    const responseSummaries = await fetch('api/Summary/all/1000/' + summaryOffset);
-    var resultsSummaries = await responseSummaries.json();
+async function fetchMlas(props) {
 
     // Fetch mlas if not already loaded.
     if (props.mlas.length == 0) {
         const responseMlas = await fetch('api/mla/all');
         const resultMlas = await responseMlas.json();
-        props.updateMlas(resultMlas);
-        return;
+        props.updateMlas(resultMlas);        
     }
 
-    var mlas = mapMlasToObject(props.mlas);
-    resultsSummaries = mapMlaPartyToSummaries(mlas, resultsSummaries)
-
-    props.updateSummaries(resultsSummaries);
 }
 
 class Search extends Component {
     static displayName = Search.name;
 
-    async componentDidMount() {
-        await fetchSummaries(this.props, 0);
+    async componentDidMount() {        
+        await fetchMlas(this.props);       
     }
 
-    async componentDidUpdate() {
-        await fetchSummaries(this.props, this.props.summaryOffset);
+    async componentDidUpdate() {        
+        this.props.fetchSummaries();
     }
 
     render() {
