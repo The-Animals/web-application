@@ -6,7 +6,7 @@ import SearchWithFilters from './SearchWithFilters';
 
 import { updateSummaries } from '../actions/index.js';
 import { updateMlas } from '../actions/index.js';
-import { fetchSummaries } from '../actions/index.js';
+import { fetchSummaries } from '../actions/fetchActions';
 
 const mapStateToProps = state => {
     return {
