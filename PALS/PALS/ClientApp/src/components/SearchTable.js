@@ -12,13 +12,20 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 
 import MLA from '../shared/carson.jpg';
+import { updateSummaryOffset } from '../actions';
 
 const mapStateToProps = state => {
     return {
         summaries: state.summaries,
-        summaryFilter: state.summaryFilter,
+        summaryFilter: state.summaryFilter        
     };
 };
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateSummaryOffset: offset => dispatch(updateSummaryOffset(offset))
+    };
+}
 
 const PersonTableCell = withStyles(theme => ({
     head: {
@@ -83,6 +90,11 @@ function SearchTable(props) {
     const summaries = props.summaries;
     const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
 
+    if (summaries.length > 0 &&
+        filteredSummaries.length == 0) {
+
+        props.updateSummaryOffset(1001);        
+    }        
 
     const [page, setPage] = React.useState(0);
     const handleChangePage = (event, newPage) => {
@@ -136,4 +148,4 @@ function SearchTable(props) {
     );
 }
 
-export default connect(mapStateToProps)(SearchTable);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchTable);

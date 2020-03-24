@@ -9,7 +9,8 @@ import { updateMlas } from '../actions/index.js';
 
 const mapStateToProps = state => {
     return {
-        mlas: state.mlas
+        mlas: state.mlas,
+        summaryOffset: state.summaryOffset
     };
 };
 
@@ -39,24 +40,33 @@ function mapMlaPartyToSummaries(mlas, summaries) {
 
 }
 
+async function fetchSummaries(props, summaryOffset) {
+    const responseSummaries = await fetch('api/Summary/all/1000/' + summaryOffset);
+    var resultsSummaries = await responseSummaries.json();
+
+    // Fetch mlas if not already loaded.
+    if (props.mlas.length == 0) {
+        const responseMlas = await fetch('api/mla/all');
+        const resultMlas = await responseMlas.json();
+        props.updateMlas(resultMlas);
+        return;
+    }
+
+    var mlas = mapMlasToObject(props.mlas);
+    resultsSummaries = mapMlaPartyToSummaries(mlas, resultsSummaries)
+
+    props.updateSummaries(resultsSummaries);
+}
+
 class Search extends Component {
     static displayName = Search.name;
 
     async componentDidMount() {
-        const responseSummaries = await fetch('api/Summary/all/1000');
-        var resultsSummaries = await responseSummaries.json();        
+        await fetchSummaries(this.props, 0);
+    }
 
-        // Fetch mlas if not already loaded.
-        if (this.props.mlas.length == 0) {
-            const responseMlas = await fetch('api/mla/all');
-            const resultMlas = await responseMlas.json();            
-            this.props.updateMlas(resultMlas);   
-        }
-
-        var mlas = mapMlasToObject(this.props.mlas);
-        resultsSummaries = mapMlaPartyToSummaries(mlas, resultsSummaries)
-
-        this.props.updateSummaries(resultsSummaries);
+    async componentDidUpdate() {
+        await fetchSummaries(this.props, this.props.summaryOffset);
     }
 
     render() {
