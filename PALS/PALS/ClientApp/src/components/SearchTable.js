@@ -98,13 +98,23 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
+
+    // For PartyRank, need to filter out -1 values from array
+    // so they aren't sorted.
+    const filteredOutElements = array.filter(function (el) {
+        return el.partyRank === -1;
+    });
+    const filteredElements = array.filter(x => !filteredOutElements.includes(x));   
+
+    const stabilizedThis = filteredElements.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
+    });    
+
+    // Append the filtered out elements again.
+    return stabilizedThis.map(el => el[0]).concat(filteredOutElements);
 }
 
 const headCells = [
@@ -230,12 +240,13 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
             <TableRow key={generateKey(result)}>
                 <PersonTableCell component="th" scope="row">
                     <img src={MLA} alt={result.name} width="120px" height="150px" />
+                    {result.name}
                 </PersonTableCell>
                 <TableCell>
                     {result.mlaRank}
                 </TableCell>
                 <TableCell>
-                    {result.partyRank}
+                    {result.partyRank === -1 ? "N/A" : result.partyRank}
                 </TableCell>
                 <TableCell>
                     {new Date(result.documentDate).toLocaleDateString('en-US')}

@@ -34,6 +34,7 @@ function mapMlaPartyToSummaries(mlas, summaries) {
     return summaries.map(function (summary) {
         var newSummary = Object.assign({}, summary);
         newSummary.caucus = mlas[summary.mlaId].party;
+        newSummary.name = mlas[summary.mlaId].name;
         return newSummary;
     });
 
