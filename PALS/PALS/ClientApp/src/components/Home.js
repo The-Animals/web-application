@@ -3,18 +3,19 @@ import { connect } from "react-redux";
 
 import { Summary } from './Summary';
 import { viewMLA } from "../actions/index";
+import { updateMlas } from "../actions/index";
 
 import mapboxgl from 'mapbox-gl';
 
 const mapDispatchToProps = dispatch => {
     return {
-        viewMLA: mlaId => dispatch(viewMLA(mlaId))
+        viewMLA: mlaId => dispatch(viewMLA(mlaId)),
+        updateMlas: mlas => dispatch(updateMlas(mlas))
     }
 }
 
 class MapBox extends Component {
     constructor(props) {
-
         super(props);
         this.state = {
             lng: -115.8155,
@@ -28,7 +29,6 @@ class MapBox extends Component {
     componentDidMount() {
 
         const self = this;
-
         const map = new mapboxgl.Map({
             container: this.mapContainer,
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -41,7 +41,6 @@ class MapBox extends Component {
                 type: 'vector',
                 url: 'mapbox://vppatel111.0ooesvor'
             });
-
             // The feature-state dependent fill-opacity expression will render the hover effect
             // when a feature's hover state is set to true.
             map.addLayer({
@@ -105,11 +104,12 @@ class MapBox extends Component {
 
             map.on('click', 'state-fills', function (e) {
                 if (this.hoveredStateId) {
-
                     const mlaId = e.features[0].properties.EDNumber20;
+                    
                     self.props.viewMLA({ mlaId });
 
                 }
+
             });
 
         });
@@ -136,8 +136,14 @@ class MapBox extends Component {
 
 }
 
-export class Home extends Component {
+class Home extends Component {
     static displayName = Home.name;
+
+    async componentDidMount() {        
+        const response = await fetch('api/mla/all');
+        const results = await response.json();
+        this.props.updateMlas(results);   
+    }
 
     render() {
     return (
@@ -160,8 +166,12 @@ export class Home extends Component {
     }
 }
 
-const Map = connect(
+export default connect(
+    null,
+    mapDispatchToProps
+)(Home);
+
+connect(
     null,
     mapDispatchToProps
 )(MapBox);
-export default Map;

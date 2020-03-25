@@ -8,8 +8,7 @@ namespace PALS.Models
     public class Filter
     {
         public string Query { get; set; }
-
-        public int MLAId { get; set; }
+        
 
         public string Caucus { get; set; }
 

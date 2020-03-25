@@ -1,11 +1,49 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import { Summary } from './Summary';
+import { updateSummaries } from '../actions/index.js';
+import { updateMlas } from '../actions/index.js';
+import { fetchSummaries } from '../actions/fetchActions';
 
-export class Search extends Component {
+const mapStateToProps = state => {
+    return {
+        mlas: state.mlas,
+        summaryOffset: state.summaryOffset,       
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateSummaries: results => dispatch(updateSummaries(results)),
+        updateMlas: mlas => dispatch(updateMlas(mlas)),
+        fetchSummaries: () => dispatch(fetchSummaries())
+    };
+}
+
+async function fetchMlas(props) {
+
+    // Fetch mlas if not already loaded.
+    if (props.mlas.length == 0) {
+        const responseMlas = await fetch('api/mla/all');
+        const resultMlas = await responseMlas.json();
+        props.updateMlas(resultMlas);        
+    }
+
+}
+
+class Search extends Component {
     static displayName = Search.name;
+
+    async componentDidMount() {        
+        await fetchMlas(this.props);       
+    }
+
+    async componentDidUpdate() {        
+        this.props.fetchSummaries();
+    }
 
     render() {
     return (
@@ -15,28 +53,11 @@ export class Search extends Component {
             <div className="container">
 
                 <div className="row">
-                    <div className="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" className="btn btn-primary">UCP</button>
-                        <button type="button" className="btn btn-secondary">NDP</button>
-                        <button type="button" className="btn btn-secondary">AB</button>
-                        <button type="button" className="btn btn-secondary">All</button>
-                    </div>
-                </div>
-
-                <div className="row">
                     <SearchWithFilters></SearchWithFilters>
                 </div>
 
                 <div className="row">
-
-                    <div className="col-7">
-                        <SearchTable></SearchTable>
-                    </div>
-
-                    <div className="col-5">
-                        <Summary></Summary>
-                    </div>
-
+                    <SearchTable></SearchTable>
                 </div>
 
             </div>
@@ -45,5 +66,9 @@ export class Search extends Component {
     );
     }
 
-
 }
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Search);

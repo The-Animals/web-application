@@ -18,18 +18,18 @@ namespace PALS.Controllers
             databaseService = new DatabaseService();
         }
 
-        [Route("mla/{mlaId}/{n?}")]
+        [Route("{mlaId}/{n?}")]
         [HttpGet]
         public async Task<List<Summary>> GetSummariesMLA(int mlaId, int n = 500)
         {            
             return await databaseService.GetMLASummaries(mlaId, n);
         }
 
-        [Route("caucus/{caucus}/{n?}")]
+        [Route("all/{n?}/{offset?}")]
         [HttpGet]
-        public async Task<List<Summary>> GetSummariesCaucus(int caucus, int n = 1000) 
+        public async Task<List<Summary>> GetAllSummaries(int n = 50000, int offset = 0) 
         {
-            return await databaseService.GetCaucusSummaries(caucus, n);
+            return await databaseService.GetAllSummaries(n, offset);
         }
     }
 }

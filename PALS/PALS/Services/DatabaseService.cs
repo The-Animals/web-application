@@ -45,7 +45,7 @@ namespace PALS.Services
             this.connection = new MySqlConnection(csb.ConnectionString);
         }
 
-        // Set the connection, command, and then execute the command with query and return the reader.  
+        // Set the connection, command, and then execute the command with query and return the reader.
         public async Task<DbDataReader> ExecuteAsync(String commandText,
             MySqlParameter[] parameters = null, CommandType commandType = CommandType.Text)
         {
@@ -57,8 +57,8 @@ namespace PALS.Services
                 if (parameters != null) cmd.Parameters.AddRange(parameters);
 
                 this.connection.Open();
-                // When using CommandBehavior.CloseConnection, the connection will be closed when the   
-                // IDataReader is closed.  
+                // When using CommandBehavior.CloseConnection, the connection will be closed when the
+                // IDataReader is closed.
                 return await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection);
             }
         }
@@ -69,8 +69,8 @@ namespace PALS.Services
         public async Task<MLA> GetMLA(int ridingNumber)
         {
             var sql = @"SELECT *
-					  FROM db.mlas 
-					  WHERE RidingNumber = @RidingNumber 
+					  FROM db.mlas
+					  WHERE RidingNumber = @RidingNumber
 					  LIMIT 1";
 
             MySqlParameter[] parameters = { new MySqlParameter("@RidingNumber", ridingNumber) };
@@ -124,17 +124,18 @@ namespace PALS.Services
             return summaries;
         }
 
-        public async Task<List<Summary>> GetCaucusSummaries(int caucus, int n)
+        public async Task<List<Summary>> GetAllSummaries(int n, int? offset = 0)
         {
             var summaries = new List<Summary>();
 
             var sql = @"SELECT *
-						FROM db.summaries_caucus_@Caucus
-						LIMIT @N";
+						FROM db.all_summaries
+						LIMIT @N
+                        OFFSET @offset";
 
             MySqlParameter[] parameters = {
-                new MySqlParameter("@Caucus", caucus),
-                new MySqlParameter("@N", n)
+                new MySqlParameter("@N", n),
+                new MySqlParameter("@offset", offset)
             };
 
             using (var dataReader = await this.ExecuteAsync(sql, parameters))
