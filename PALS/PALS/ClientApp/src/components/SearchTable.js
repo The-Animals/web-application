@@ -312,6 +312,13 @@ function SearchTable(props) {
         setPage(0);
     };
 
+    // Move back the page number back to new maximum if 
+    // there are less filtered summaries now.
+    if (page * rowsPerPage > filteredSummaries.length) {
+        const newMax = Math.floor(filteredSummaries.length / rowsPerPage);
+        setPage(newMax);
+    }
+
     const mlaRows = generateMlaRows(
         filteredSummaries,
         props.loading,
