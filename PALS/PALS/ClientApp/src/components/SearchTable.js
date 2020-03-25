@@ -267,8 +267,7 @@ function SearchTable(props) {
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-        console.log("Sort me, ", order, orderBy);
+        setOrderBy(property);        
     };
 
     const summaries = props.summaries;

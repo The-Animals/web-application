@@ -90,6 +90,19 @@ function SearchWithFilters(props) {
     var filteredMLAs = filterMLAsByParty(props.mlas, party);
 
     useEffect(() => {
+        const timeOutId = setTimeout(() =>
+            props.updateSummaryFilter({
+                mlaId: mla,
+                caucus: party,
+                startDate: startDate,
+                endDate: endDate,
+                query: query,
+            }),
+            500);
+        return () => clearTimeout(timeOutId);
+    }, [query]);
+
+    useEffect(() => {
         props.updateSummaryFilter({
             mlaId: mla,
             caucus: party,
@@ -97,7 +110,7 @@ function SearchWithFilters(props) {
             endDate: endDate,
             query: query,
         });     
-    }, [query, mla, party, startDate, endDate]);
+    }, [mla, party, startDate, endDate]);
 
     // TODO: Replace native date pickers with material-ui/pickers
     return (
