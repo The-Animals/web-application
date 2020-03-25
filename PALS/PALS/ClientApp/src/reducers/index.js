@@ -2,6 +2,21 @@
 import { UPDATE_SUMMARY_FILTER } from "../constants/action-types.js";
 import { UPDATE_ALL_SUMMARIES } from "../constants/action-types.js";
 import { UPDATE_ALL_MLAS } from "../constants/action-types.js";
+import { UPDATE_SUMMARY_OFFSET } from "../constants/action-types.js";
+
+import {
+    FETCH_MLA_LIST_BEGIN, 
+    FETCH_MLA_LIST_SUCCESS, 
+    FETCH_MLA_LIST_ERROR
+} from '../constants/mlaListActions';
+
+import {
+    FETCH_SUMMARIES_BEGIN,
+    FETCH_SUMMARIES_SUCCESS,
+    FETCH_SUMMARIES_FAILURE
+} from "../constants/summaryTableActions.js";
+
+const MAX_SUMMARY_LIMIT = 10000;
 
 const initialState = {
     mlas: [],
@@ -22,8 +37,12 @@ function rootReducer(state = initialState, action) {
     switch (action.type) {
         case VIEW_MLA:
             return { ...state, mla: action.mlaId }
-        case UPDATE_ALL_MLAS:
-            return { ...state, mlas: action.mlas }
+        case FETCH_MLA_LIST_BEGIN:
+            return { ...state, loading: true, error: null };
+        case FETCH_MLA_LIST_SUCCESS:
+            return { ...state, loading: false };
+        case FETCH_MLA_LIST_FAILURE:
+            return { ...state, loading: false, error: action.payload.error };
         case UPDATE_ALL_SUMMARIES:
             return { ...state, summaries: action.summaries }
         case UPDATE_SUMMARY_FILTER:

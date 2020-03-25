@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import MLA from '../shared/carson.jpg';
 import Grid from '@material-ui/core/Grid';
 
-import { getData } from '../services/AjaxService.js';
+import { getData } from '../services/api.js';
 
 const mapStateToProps = state => {
     return { mla: state.mla };

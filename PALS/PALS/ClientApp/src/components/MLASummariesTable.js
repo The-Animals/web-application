@@ -10,7 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import { getData } from '../services/AjaxService.js';
+import { getData } from '../services/api.js';
 
 const mapStateToProps = state => {
     return { mla: state.mla };
