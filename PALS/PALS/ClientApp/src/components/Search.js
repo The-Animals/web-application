@@ -11,7 +11,7 @@ import { fetchSummaries } from '../actions/fetchActions';
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
-        summaryOffset: state.summaryOffset,       
+        summaryOffset: state.summaryOffset,
     };
 };
 
@@ -23,26 +23,26 @@ const mapDispatchToProps = dispatch => {
     };
 }
 
-async function fetchMlas(props) {        
+async function fetchMlas(props) {
     const responseMlas = await fetch('api/mla/all');
     const resultMlas = await responseMlas.json();
-    props.updateMlas(resultMlas);            
+    props.updateMlas(resultMlas);
 }
 
 class Search extends Component {
     static displayName = Search.name;
 
-    async componentDidMount() {    
+    async componentDidMount() {
 
         // Fetch mlas if not already loaded.
         if (this.props.mlas.length === 0) {
             await fetchMlas(this.props);
-        } else {            
+        } else {
             this.props.fetchSummaries();
         }
     }
 
-    async componentDidUpdate() {        
+    async componentDidUpdate() {
         this.props.fetchSummaries();
     }
 

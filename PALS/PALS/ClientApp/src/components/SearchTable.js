@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -58,7 +58,7 @@ const useStyles = makeStyles({
     },
 });
 
-function descendingComparator(a, b, orderBy) {    
+function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -70,7 +70,7 @@ function descendingComparator(a, b, orderBy) {
 
 function descendingDateComparator(a, b, orderBy) {
     const dateA = new Date(a[orderBy]);
-    const dateB = new Date(b[orderBy]);    
+    const dateB = new Date(b[orderBy]);
 
     if (dateB < dateA) {
         return -1;
@@ -78,14 +78,14 @@ function descendingDateComparator(a, b, orderBy) {
     if (dateB > dateA) {
         return 1;
     }
-    return 0;   
+    return 0;
 }
 
 function getComparator(order, orderBy) {
 
     // TODO: Can be improved by adding a "type" field to the header,
     // which is passed to getComparator() which performs a select-case
-    // depending on type.    
+    // depending on type.
     if (orderBy === "date") {
         return order === 'desc'
             ? (a, b) => descendingDateComparator(a, b, orderBy)
@@ -97,7 +97,7 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort(array, comparator) {    
+function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
@@ -112,7 +112,7 @@ const headCells = [
     { id: 'mlaRank', sortable: true, alignRight: false, disablePadding: false, label: 'MLA Rank' },
     { id: 'partyRank', sortable: true, alignRight: false, disablePadding: false, label: 'Party Rank' },
     { id: 'documentDate', sortable: true, alignRight: false, disablePadding: false, label: 'Date' },
-    { id: 'summary', sortable: false, alignRight: false, disablePadding: false, label: 'Summary' },    
+    { id: 'summary', sortable: false, alignRight: false, disablePadding: false, label: 'Summary' },
 ];
 
 function EnhancedTableHead(props) {
@@ -124,7 +124,7 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                {headCells.map(headCell => (                    
+                {headCells.map(headCell => (
                     headCell.sortable ?
                         <TableCell
                             key={headCell.id}
@@ -148,7 +148,7 @@ function EnhancedTableHead(props) {
                         :
                         <TableCell key={headCell.id}>
                             {headCell.label}
-                        </TableCell>                                        
+                        </TableCell>
                 ))}
             </TableRow>
         </TableHead>
@@ -156,10 +156,10 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,    
-    onRequestSort: PropTypes.func.isRequired,    
+    classes: PropTypes.object.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,    
+    orderBy: PropTypes.string.isRequired,
 };
 
 const generateKey = (result) => {
@@ -195,11 +195,11 @@ function processSummaryFilter(filter, summaries) {
             const query = filter.query.toLowerCase();
             const summaryText = summary.text.toLowerCase();
             if (!summaryText.includes(query)) return false;
-        }            
+        }
 
         return true;
 
-    });    
+    });
 }
 
 function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order, orderBy) {
@@ -224,7 +224,7 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
         );
     }
 
-    return stableSort(filteredSummaries, getComparator(order, orderBy))    
+    return stableSort(filteredSummaries, getComparator(order, orderBy))
         .slice(sliceStart, sliceEnd)
         .map(result =>
             <TableRow key={generateKey(result)}>
@@ -251,7 +251,7 @@ function SearchTable(props) {
     const classes = useStyles();
 
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('rank');    
+    const [orderBy, setOrderBy] = React.useState('rank');
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -267,8 +267,8 @@ function SearchTable(props) {
         filteredSummaries.length === 0 &&
         !props.loading) {
 
-        props.updateSummaryOffset(1001);        
-    }        
+        props.updateSummaryOffset(1001);
+    }
 
     const [page, setPage] = React.useState(0);
     const handleChangePage = (event, newPage) => {
@@ -303,10 +303,10 @@ function SearchTable(props) {
             <TableContainer>
                 <Table className={classes.table} aria-label="simple table">
                     <EnhancedTableHead
-                        classes={classes}                        
+                        classes={classes}
                         order={order}
-                        orderBy={orderBy}                        
-                        onRequestSort={handleRequestSort}                        
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
                     />
                     <TableBody>
                         {mlaRows}

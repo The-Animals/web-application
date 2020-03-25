@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
@@ -31,12 +29,32 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+function filterMLAsByParty(mlas, party) {    
+
+    if (party === "ALL") return mlas;
+
+    return mlas.filter(function (mla) {
+        // If mla party matches filter or mla has no associated party.
+        return mla.party === party || !mla.party;
+    });
+}
+
+// TODO: Maybe it would be better for the endpoint to return a dictionary.
+function mapMlasToObject(mlas) {
+
+    return mlas.reduce(function (map, obj) {
+        map[obj.id] = obj;
+        return map;
+    }, {});
+
+}
+
 function SearchWithFilters(props) {
     const classes = useStyles();
-    
+
     const [mla, setMla] = useState(0);
-    const handleMlaChange = event => {        
-        setMla(event.target.value);        
+    const handleMlaChange = event => {           
+        setMla(event.target.value);
     };
 
     const [query, setQuery] = useState("");
@@ -56,20 +74,30 @@ function SearchWithFilters(props) {
 
     const [party, setParty] = useState("ALL");
     const handlePartyChange = (event, newParty) => {
+
         if (newParty !== null) {
-            setParty(newParty);
+            setParty(newParty);            
+        }
+
+        var mlas = mapMlasToObject(props.mlas);
+        var selectedMLA = mlas[mla];  
+
+        if (newParty !== "ALL" && selectedMLA.party !== newParty) {            
+            setMla(props.mlas[0].id);
         }
     };
+   
+    var filteredMLAs = filterMLAsByParty(props.mlas, party);
 
-    const handleSearch = async function () {
+    useEffect(() => {
         props.updateSummaryFilter({
             mlaId: mla,
             caucus: party,
             startDate: startDate,
             endDate: endDate,
             query: query,
-        });   
-    } 
+        });     
+    }, [query, mla, party, startDate, endDate]);
 
     // TODO: Replace native date pickers with material-ui/pickers
     return (
@@ -82,33 +110,19 @@ function SearchWithFilters(props) {
                 <ToggleButton key={2} value="UCP">
                     UCP
                 </ToggleButton>
-                <ToggleButton key={3} value="AB">
-                    AB
-                </ToggleButton>
-                <ToggleButton key={4} value="ALL">
+                <ToggleButton key={3} value="ALL">
                     All
                 </ToggleButton>
             </ToggleButtonGroup>
 
             <div className={classes.root}>
-            <TextField 
-                fullWidth
+            <TextField                 
                 className={classes.root}
                 id="standard-search"
                 label="Search field"
                 onChange={handleQueryChange}
                 value={query}
                 type="search" />
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSearch}
-                className={classes.button}
-                endIcon={<SearchIcon />}
-            >
-                Search
-            </Button>
 
             <TextField
                 id="standard-select-riding"
@@ -118,7 +132,7 @@ function SearchWithFilters(props) {
                 onChange={handleMlaChange}
                 helperText="Please select a riding"
             >
-                {props.mlas.map(option => (
+                {filteredMLAs.map(option => (
                     <MenuItem key={option.id} value={option.id}>
                         {option.riding}
                     </MenuItem>
@@ -133,7 +147,7 @@ function SearchWithFilters(props) {
                 onChange={handleMlaChange}
                 helperText="Please select an MLA"
             >
-                {props.mlas.map(option => (
+                {filteredMLAs.map(option => (
                     <MenuItem key={option.id} value={option.id}>
                         {option.name}
                     </MenuItem>

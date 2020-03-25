@@ -12,7 +12,7 @@
             'Content-Type': 'application/json'
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client            
+        referrerPolicy: 'no-referrer', // no-referrer, *client
     });
     return await response.json(); // parses JSON response into native JavaScript objects
 }
