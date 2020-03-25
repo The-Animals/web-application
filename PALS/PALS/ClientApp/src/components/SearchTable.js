@@ -12,6 +12,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import MLA from '../shared/carson.jpg';
 import { updateSummaryOffset } from '../actions';
@@ -217,8 +218,28 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
     if (loading) {
         return (
             <TableRow>
-                <TableCell align="left">
-                    {"Loading..."}
+                <TableCell>
+                    <Skeleton variant="rect" width={150} height={200} />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" width={400} />
+                    <Skeleton animation="wave" width={400} />
+                    <Skeleton animation="wave" width={400} />
                 </TableCell>
             </TableRow>
         );
