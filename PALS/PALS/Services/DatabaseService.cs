@@ -124,16 +124,18 @@ namespace PALS.Services
             return summaries;
         }
 
-        public async Task<List<Summary>> GetAllSummaries(int n)
+        public async Task<List<Summary>> GetAllSummaries(int n, int? offset = 0)
         {
             var summaries = new List<Summary>();
 
             var sql = @"SELECT *
 						FROM db.all_summaries
-						LIMIT @N";
+						LIMIT @N
+                        OFFSET @offset";
 
             MySqlParameter[] parameters = {
-                new MySqlParameter("@N", n)
+                new MySqlParameter("@N", n),
+                new MySqlParameter("@offset", offset)
             };
 
             using (var dataReader = await this.ExecuteAsync(sql, parameters))
