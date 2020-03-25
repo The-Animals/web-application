@@ -29,7 +29,10 @@ const initialState = {
         startDate: new Date("2015-05-21T13:30:00"),
         endDate: new Date("2020-05-21T13:30:00"),
         query: "",
-    },    
+    },
+    summaryOffset: 0,
+    loading: false,
+    error: null
 };
 
 function rootReducer(state = initialState, action) {
@@ -44,9 +47,21 @@ function rootReducer(state = initialState, action) {
         case FETCH_MLA_LIST_FAILURE:
             return { ...state, loading: false, error: action.payload.error };
         case UPDATE_ALL_SUMMARIES:
-            return { ...state, summaries: action.summaries }
+            return { ...state, summaries: state.summaries.concat(action.summaries) }
         case UPDATE_SUMMARY_FILTER:
             return { ...state, summaryFilter: action.filter }
+        case UPDATE_SUMMARY_OFFSET:
+            if (state.summaryOffset < MAX_SUMMARY_LIMIT) {
+                return { ...state, summaryOffset: state.summaryOffset + action.offset }
+            } else {
+                return { ...state, summaryOffset: state.summaryOffset }
+            }
+        case FETCH_SUMMARIES_BEGIN:
+            return { ...state, loading: true, error: null };
+        case FETCH_SUMMARIES_SUCCESS:
+            return { ...state, loading: false };
+        case FETCH_SUMMARIES_FAILURE:
+            return { ...state, loading: false, error: action.payload.error };
         default:
             return state;
     }

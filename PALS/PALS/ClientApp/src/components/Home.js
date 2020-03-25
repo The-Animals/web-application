@@ -26,15 +26,15 @@ class Home extends Component {
 
     render() {
     return (
-        <div>
-            <div className="container">
-                <div className="row">
+        <div style={{height: '100%'}}>
+            <div className="container" style={{height: '100%'}}>
+                <div className="row" style={{height: '100%'}}>
 
-                    <div className="col-sm">
+                    <div className="col-sm" style={{height: '100%'}}>
 
                     </div>
 
-                    <div className="col-sm">
+                    <div className="col-sm" style={{height: '100%'}}>
                         <Summary></Summary>
                     </div>
 

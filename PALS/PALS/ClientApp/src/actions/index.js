@@ -2,6 +2,7 @@
 import { UPDATE_SUMMARY_FILTER } from "../constants/action-types.js";
 import { UPDATE_ALL_MLAS } from "../constants/action-types.js";
 import { UPDATE_ALL_SUMMARIES } from "../constants/action-types.js";
+import { UPDATE_SUMMARY_OFFSET } from "../constants/action-types.js";
 
 export function viewMLA(mlaId) {
     return { type: VIEW_MLA, mlaId }
@@ -18,3 +19,10 @@ export function updateSummaries(summaries) {
 export function updateMlas(mlas) {
     return { type: UPDATE_ALL_MLAS, mlas }
 }
+<<<<<<< HEAD
+=======
+
+export function updateSummaryOffset(offset) {
+    return { type: UPDATE_SUMMARY_OFFSET, offset }
+}
+>>>>>>> master

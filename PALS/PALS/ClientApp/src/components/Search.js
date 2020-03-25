@@ -6,12 +6,13 @@ import SearchWithFilters from './SearchWithFilters';
 
 import { updateSummaries } from '../actions/index.js';
 import { fetchMlas } from '../actions/mlaListActions.js';
-import { fetchSummaries } from '../actions/fetchActions';
+import { fetchSummaries } from '../actions/summaryTableActions';
 
 
 const mapStateToProps = state => {
     return {
-        mlas: state.mlas
+        mlas: state.mlas,
+        summaryOffset: state.summaryOffset,       
     };
 };
 
@@ -23,12 +24,26 @@ const mapDispatchToProps = dispatch => {
     };
 }
 
+async function fetchMlas(props) {
+
+    // Fetch mlas if not already loaded.
+    if (props.mlas.length == 0) {
+        const responseMlas = await fetch('api/mla/all');
+        const resultMlas = await responseMlas.json();
+        props.updateMlas(resultMlas);        
+    }
+}
+
 class Search extends Component {
     static displayName = Search.name;
 
     async componentDidMount() {        
         this.props.fetchMlas();       
-        this.props.updateSummaries(resultsSummaries);
+        this.props.updateSummaries(resultsSummaries);   
+    }
+
+    async componentDidUpdate() {        
+        this.props.fetchSummaries();
     }
 
     render() {

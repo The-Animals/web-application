@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
@@ -8,16 +8,25 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 
 import MLA from '../shared/carson.jpg';
+import { updateSummaryOffset } from '../actions';
 
 const mapStateToProps = state => {
     return {
         summaries: state.summaries,
         summaryFilter: state.summaryFilter,
+        loading: state.loading
     };
 };
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateSummaryOffset: offset => dispatch(updateSummaryOffset(offset))
+    };
+}
 
 const PersonTableCell = withStyles(theme => ({
     head: {
@@ -76,38 +85,98 @@ function processSummaryFilter(filter, summaries) {
     });    
 }
 
+function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd) {
+
+    if (loading) {
+        return (
+            <TableRow>
+                <TableCell align="left">
+                    {"Loading..."}
+                </TableCell>
+            </TableRow>
+        );
+    }
+
+    if (filteredSummaries.length == 0) {
+        return (
+            <TableRow>
+                <TableCell align="left">
+                    {"No results found."}
+                </TableCell>
+            </TableRow>
+        );
+    }
+
+    return filteredSummaries
+        .slice(sliceStart, sliceEnd)
+        .map(result =>
+            <TableRow key={generateKey(result)}>
+                <PersonTableCell component="th" scope="row">
+                    <img src={MLA} width="120px" height="150px" />
+                </PersonTableCell>
+                <TableCell align="left">
+                    {result.text}
+                </TableCell>
+            </TableRow>
+        );
+}
+
 function SearchTable(props) {
     const classes = useStyles();
 
     const summaries = props.summaries;
     const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
 
-    const mlaRows = filteredSummaries.map(result =>
-        <TableRow key={generateKey(result)}>
-            <PersonTableCell component="th" scope="row">
-                <img src={MLA} width="120px" height="150px" />
-            </PersonTableCell>
-            <TableCell align="left">
-                {result.text}
-            </TableCell>
-        </TableRow>
-    );
+    if (summaries.length > 0 &&
+        filteredSummaries.length == 0 &&
+        !props.loading) {
+
+        props.updateSummaryOffset(1001);        
+    }        
+
+    const [page, setPage] = React.useState(0);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const handleChangeRowsPerPage = event => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const mlaRows = generateMlaRows(
+        filteredSummaries,
+        props.loading,
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage);
 
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Person</TableCell>
-                        <TableCell align="left">Summary</TableCell>                    
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {mlaRows}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Paper>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={filteredSummaries.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+            <TableContainer>
+                <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Person</TableCell>
+                            <TableCell align="left">Summary</TableCell>                    
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {mlaRows}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Paper>
     );
 }
 
-export default connect(mapStateToProps)(SearchTable);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchTable);

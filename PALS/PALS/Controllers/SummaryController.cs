@@ -25,11 +25,11 @@ namespace PALS.Controllers
             return await databaseService.GetMLASummaries(mlaId, n);
         }
 
-        [Route("all/{n?}")]
+        [Route("all/{n?}/{offset?}")]
         [HttpGet]
-        public async Task<List<Summary>> GetAllSummaries(int n = 50000) 
+        public async Task<List<Summary>> GetAllSummaries(int n = 50000, int offset = 0) 
         {
-            return await databaseService.GetAllSummaries(n);
+            return await databaseService.GetAllSummaries(n, offset);
         }
 
         [Route("participation/{mlaId}")]
