@@ -20,8 +20,8 @@ const mapStateToProps = state => {
 
 const useStyles = makeStyles({
     root: {
-        minWidth: 525,
         display: 'flex',
+        height: "100%"
     },
     details: {
         display: 'flex',
@@ -64,7 +64,7 @@ function MLAProfileCard(props) {
     }, [mlaId]);
 
     return (
-        <Card className={classes.root}>
+        <Card className={classes.root} id="testing">
             <CardMedia
                 className={classes.img}
                 image={MLA}

@@ -8,8 +8,8 @@ export class Layout extends Component {
   render () {
     return (
       <div>
-        <NavMenu />
-        <Container>
+        <NavMenu style={{height: "20vh"}}/>
+        <Container style={{height: "80vh"}}>
           {this.props.children}
         </Container>
       </div>
