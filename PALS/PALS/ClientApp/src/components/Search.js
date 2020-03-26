@@ -49,8 +49,15 @@ class Search extends Component {
 
     }
 
-    async componentDidUpdate() {
-        this.props.fetchSummaries();
+    async componentDidUpdate(prevProps, prevState) {
+
+        // Only fetch if summary offset or first time load changes.
+        if (prevProps.summaryOffset !== this.props.summaryOffset ||
+            prevProps.firstTimeLoad !== this.props.firstTimeLoad)
+        {
+            this.props.fetchSummaries();
+        }
+        
     }
 
     render() {
