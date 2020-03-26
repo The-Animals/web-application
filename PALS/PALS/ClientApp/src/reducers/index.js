@@ -4,6 +4,8 @@ import { UPDATE_ALL_SUMMARIES } from "../constants/action-types.js";
 import { UPDATE_ALL_MLAS } from "../constants/action-types.js";
 import { UPDATE_SUMMARY_OFFSET } from "../constants/action-types.js";
 
+import { SET_FIRST_TIME_LOAD } from "../constants/action-types.js";
+
 import {
     FETCH_SUMMARIES_BEGIN,
     FETCH_SUMMARIES_SUCCESS,
@@ -26,7 +28,8 @@ const initialState = {
     },
     summaryOffset: 0,
     loading: false,
-    error: null
+    error: null,
+    firstTimeLoad: false,
 };
 
 function rootReducer(state = initialState, action) {
@@ -52,6 +55,8 @@ function rootReducer(state = initialState, action) {
             return { ...state, loading: false };
         case FETCH_SUMMARIES_FAILURE:
             return { ...state, loading: false, error: action.payload.error };
+        case SET_FIRST_TIME_LOAD:
+            return { ...state, firstTimeLoad: true };
         default:
             return state;
     }

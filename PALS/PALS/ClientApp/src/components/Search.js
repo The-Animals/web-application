@@ -4,14 +4,18 @@ import { connect } from "react-redux";
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import { updateSummaries } from '../actions/index.js';
-import { updateMlas } from '../actions/index.js';
+import {
+    updateSummaries,
+    updateMlas,
+    setFirstTimeLoad } from '../actions/index.js';
+
 import { fetchSummaries } from '../actions/fetchActions';
 
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
         summaryOffset: state.summaryOffset,
+        firstTimeLoad: state.firstTimeLoad,
     };
 };
 
@@ -19,7 +23,8 @@ const mapDispatchToProps = dispatch => {
     return {
         updateSummaries: results => dispatch(updateSummaries(results)),
         updateMlas: mlas => dispatch(updateMlas(mlas)),
-        fetchSummaries: () => dispatch(fetchSummaries())
+        fetchSummaries: () => dispatch(fetchSummaries()),
+        setFirstTimeLoad: () => dispatch(setFirstTimeLoad()),
     };
 }
 
@@ -31,15 +36,17 @@ async function fetchMlas(props) {
 
 class Search extends Component {
     static displayName = Search.name;
+    static isFirstLoad = true;
 
     async componentDidMount() {
 
         // Fetch mlas if not already loaded.
         if (this.props.mlas.length === 0) {
-            await fetchMlas(this.props);
-        } else {
-            this.props.fetchSummaries();
+            await fetchMlas(this.props);        
         }
+
+        this.props.setFirstTimeLoad();
+
     }
 
     async componentDidUpdate() {
