@@ -2,15 +2,15 @@ import {
     FETCH_MLA_SUMMARIES_BEGIN, 
     FETCH_MLA_SUMMARIES_SUCCESS, 
     FETCH_MLA_SUMMARIES_ERROR
-} from '../constants/mlaSUMMARIESActionTypes';
+} from '../constants/mlaSummariesActionTypes.js';
 
 export const fetchMlaSummariesBegin = () => ({ 
     type: FETCH_MLA_SUMMARIES_BEGIN
 });
 
-export const fetchMlaSummariesSuccess = summaries => ({
+export const fetchMlaSummariesSuccess = mlaSummaries => ({
     type: FETCH_MLA_SUMMARIES_SUCCESS,
-    payload: { summaries }
+    payload: { mlaSummaries }
 });
 
 export const fetchMlaSummariesError = error => ({
@@ -18,10 +18,10 @@ export const fetchMlaSummariesError = error => ({
     payload: { error }
 });
 
-export function fetchMlas(mlaId) {
+export function fetchMlaSummaries(mlaId) {
     return (dispatch) => {
         dispatch(fetchMlaSummariesBegin());
-        return fetch('api/summaries/' + mlaId)
+        return fetch('api/summary/' + mlaId)
             .then(handleErrors)
             .then(res => res.json())
             .then(json => {

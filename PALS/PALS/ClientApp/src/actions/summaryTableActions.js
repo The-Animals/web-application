@@ -6,15 +6,13 @@
     UPDATE_SUMMARY_OFFSET
 } from "../constants/summaryTableActionTypes.js";
 
-import { updateSummaries } from './mlaListActions.js';
-
 export const fetchSummariesBegin = () => ({
     type: FETCH_SUMMARIES_BEGIN
 });
 
-export const fetchSummariesSuccess = summaries => ({
+export const fetchSummariesSuccess = allSummaries => ({
     type: FETCH_SUMMARIES_SUCCESS,
-    payload: { summaries }
+    payload: { allSummaries }
 });
 
 export const fetchSummariesFailure = error => ({
@@ -32,26 +30,6 @@ export const updateSummaryOffset = offset => ({
     payload: { offset }
 });
 
-
-function mapMlasToObject(mlas) {
-
-    return mlas.reduce(function (map, obj) {
-        map[obj.id] = obj;
-        return map;
-    }, {});
-
-}
-
-function mapMlaPartyToSummaries(mlas, summaries) {
-
-    return summaries.map(function (summary) {
-        var newSummary = Object.assign({}, summary);
-        newSummary.caucus = mlas[summary.mlaId].party;
-        return newSummary;
-    });
-
-}
-
 export function fetchSummaries() {
     return (dispatch, getState) => {
         dispatch(fetchSummariesBegin());
@@ -59,14 +37,7 @@ export function fetchSummaries() {
             .then(handleErrors)
             .then(res => res.json())
             .then(json => {
-
                 dispatch(fetchSummariesSuccess(json));
-
-                const mlas = mapMlasToObject(getState().mlas);
-                const resultsSummaries = mapMlaPartyToSummaries(mlas, json);
-
-                dispatch(updateSummaries(resultsSummaries));
-
                 return json;
             })
             .catch(error => dispatch(fetchSummariesFailure(error)));

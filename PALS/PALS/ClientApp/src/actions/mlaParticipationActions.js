@@ -8,9 +8,9 @@ export const fetchMlaParticipationBegin = () => ({
     type: FETCH_MLA_PARTICIPATION_BEGIN
 });
 
-export const fetchMlaParticipationSuccess = summaries => ({
+export const fetchMlaParticipationSuccess = participation => ({
     type: FETCH_MLA_PARTICIPATION_SUCCESS,
-    payload: { summaries }
+    payload: { participation }
 });
 
 export const fetchMlaParticipationError = error => ({
@@ -18,10 +18,10 @@ export const fetchMlaParticipationError = error => ({
     payload: { error }
 });
 
-export function fetchMlas(mlaId) {
+export function fetchMlaParticipation(mlaId) {
     return (dispatch) => {
         dispatch(fetchMlaParticipationBegin());
-        return fetch('api/summaries/')
+        return fetch('api/summary/participation/' + mlaId)
             .then(handleErrors)
             .then(res => res.json())
             .then(json => {

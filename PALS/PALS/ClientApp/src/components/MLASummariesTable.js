@@ -17,10 +17,11 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import TablePagination from '@material-ui/core/TablePagination';
 import clsx from 'clsx';
 
-import { getData } from '../services/api.js';
 
 const mapStateToProps = state => {
-    return { mla: state.mla };
+    return { 
+        summaries: state.summaries
+    };
 };
 
 const useStyles = makeStyles({
@@ -37,19 +38,7 @@ const useStyles = makeStyles({
 });
 
 function MLASummariesTable(props) {
-
-    const mlaId = parseInt(props.mla.mlaId) || 1;
     const classes = useStyles();
-
-    const [MLASummaries, setMLASummaries] = useState([]);
-    useEffect(() => {
-        async function getMLASummaries() {
-            const MLASummaries = await getData('api/summary/mla/' + mlaId + '/500');
-            setMLASummaries(MLASummaries);
-            console.log(MLASummaries);
-        }
-        getMLASummaries();
-    }, [mlaId]);
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(2);
@@ -80,7 +69,7 @@ function MLASummariesTable(props) {
                   <TableHead>
                   </TableHead>
                   <TableBody>
-                      {MLASummaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+                      {props.summaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
                           <TableRow key={row.mlaRank} className={classes.row}>
                               <TableCell align="left">
                                   {row.mlaRank}
@@ -96,7 +85,7 @@ function MLASummariesTable(props) {
           <TablePagination
             rowsPerPageOptions={[1, 2, 3, 4, 5]}
             component="div"
-            count={MLASummaries.length}
+            count={props.summaries.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

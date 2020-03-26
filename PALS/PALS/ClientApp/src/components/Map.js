@@ -1,8 +1,13 @@
+import React, { Component } from 'react';
+import { connect } from "react-redux";
 import mapboxgl from 'mapbox-gl';
+
+import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
+import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 
 const mapStateToProps = state => {
     return {
-        mlas = state.mlas,
+        mlas: state.mlas,
     }
 }
 
@@ -104,7 +109,7 @@ class MapBox extends Component {
             map.on('click', 'state-fills', function (e) {
                 if (this.hoveredStateId) {
                     const ridingId = e.features[0].properties.EDNumber20;
-                    const mla = state.mlas.find(mla => mla.ridingId == ridingId);
+                    const mla = this.state.mlas.find(mla => mla.ridingId == ridingId);
                     this.props.fetchMlaSummaries(mla.id); 
                     this.props.fetchMlaSummaries(mla.id);
                 }

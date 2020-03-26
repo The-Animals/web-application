@@ -8,7 +8,7 @@ export const fetchMlaListBegin = () => ({
     type: FETCH_MLA_LIST_BEGIN
 });
 
-export const fechMlaListSuccess = mlas => ({
+export const fetchMlaListSuccess = mlas => ({
     type: FETCH_MLA_LIST_SUCCESS,
     payload: { mlas }
 });
