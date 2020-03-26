@@ -36,7 +36,6 @@ async function fetchMlas(props) {
 
 class Search extends Component {
     static displayName = Search.name;
-    static isFirstLoad = true;
 
     async componentDidMount() {
 

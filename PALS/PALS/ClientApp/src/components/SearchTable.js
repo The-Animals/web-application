@@ -13,6 +13,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import Skeleton from '@material-ui/lab/Skeleton';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import MLA from '../shared/carson.jpg';
 import { updateSummaryOffset } from '../actions';
@@ -274,6 +275,8 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
                 </TableCell>
                 <TableCell align="left">
                     {result.text}
+                    <br />
+                    <a href={result.documentUrl}>{" Go to document"}<ChevronRightIcon /></a>
                 </TableCell>
             </TableRow>
         );
