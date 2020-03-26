@@ -11,7 +11,7 @@ import { fetchSummaries } from '../actions/summaryTableActions';
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
-        summaryOffset: state.summaryOffset
+        summaryOffset: state.summaryOffset,
     };
 };
 
@@ -25,11 +25,13 @@ const mapDispatchToProps = dispatch => {
 class Search extends Component {
     static displayName = Search.name;
 
-    async componentDidMount() {        
-        this.props.fetchMlas();
+    async componentDidMount() {
+        if (this.props.mlas.length == 0) {
+            this.props.fetchMlas();
+        }
     }
 
-    async componentDidUpdate() {        
+    async componentDidUpdate() {
         this.props.fetchSummaries();
     }
 
