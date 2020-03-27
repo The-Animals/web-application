@@ -148,6 +148,29 @@ namespace PALS.Services
             return summaries;
         }
 
+        public async Task<List<Participation>> GetParticipationData(int mlaId)
+        {
+            var participations = new List<Participation>();
+
+            var sql = @"SELECT d.Date, count(s.Sentence) as Quantity
+                        LEFT JOIN db.summaries_@MLA_ID s ON d.Id = s.DocumentId
+                        FROM db.documents d
+                        GROUP BY d.Date;";
+            
+            MySqlParameter[] parameters = {
+                new MySqlParameter("@MLA_ID", mlaId)
+            };
+
+            using(var dataReader = await this.ExecuteAsync(sql, parameters)) 
+            {
+                while (dataReader.Read())
+                {
+                    participations.Add(new Participation(dataReader));
+                }
+            }
+            return participations;
+        }
+
 
         /**
 		 * Setup a SSH tunnel.

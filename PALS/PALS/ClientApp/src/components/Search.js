@@ -4,12 +4,9 @@ import { connect } from "react-redux";
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import {
-    updateSummaries,
-    updateMlas,
-    setFirstTimeLoad } from '../actions/index.js';
+import { fetchMlas } from '../actions/mlaListActions.js';
+import { fetchSummaries } from '../actions/summaryTableActions';
 
-import { fetchSummaries } from '../actions/fetchActions';
 
 const mapStateToProps = state => {
     return {
@@ -21,17 +18,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateSummaries: results => dispatch(updateSummaries(results)),
-        updateMlas: mlas => dispatch(updateMlas(mlas)),
-        fetchSummaries: () => dispatch(fetchSummaries()),
-        setFirstTimeLoad: () => dispatch(setFirstTimeLoad()),
+        fetchMlas: () => dispatch(fetchMlas()),
+        fetchSummaries: () => dispatch(fetchSummaries())
     };
-}
-
-async function fetchMlas(props) {
-    const responseMlas = await fetch('api/mla/all');
-    const resultMlas = await responseMlas.json();
-    props.updateMlas(resultMlas);
 }
 
 class Search extends Component {
@@ -41,7 +30,7 @@ class Search extends Component {
 
         // Fetch mlas if not already loaded.
         if (this.props.mlas.length === 0) {
-            await fetchMlas(this.props);        
+            await fetchMlas(this.props);
         }
 
         this.props.setFirstTimeLoad();
@@ -56,7 +45,7 @@ class Search extends Component {
         {
             this.props.fetchSummaries();
         }
-        
+
     }
 
     render() {

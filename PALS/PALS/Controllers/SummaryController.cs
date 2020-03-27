@@ -31,5 +31,11 @@ namespace PALS.Controllers
         {
             return await databaseService.GetAllSummaries(n, offset);
         }
+
+        [Route("participation/{mlaId}")]
+        [HttpGet]
+        public async Task<List<Participation>> GetParticipationTimeSeries(int mlaId) {
+            return await databaseService.GetParticipationData(mlaId);
+        }
     }
 }

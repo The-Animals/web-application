@@ -16,11 +16,11 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import MLA from '../shared/carson.jpg';
-import { updateSummaryOffset } from '../actions';
+import { updateSummaryOffset } from '../actions/summaryTableActions';
 
 const mapStateToProps = state => {
     return {
-        summaries: state.summaries,
+        allSummaries: state.allSummaries,
         summaryFilter: state.summaryFilter,
         loading: state.loading
     };
@@ -106,14 +106,14 @@ function stableSort(array, comparator) {
     const filteredOutElements = array.filter(function (el) {
         return el.partyRank === -1;
     });
-    const filteredElements = array.filter(x => !filteredOutElements.includes(x));   
+    const filteredElements = array.filter(x => !filteredOutElements.includes(x));
 
     const stabilizedThis = filteredElements.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
-    });    
+    });
 
     // Append the filtered out elements again.
     return stabilizedThis.map(el => el[0]).concat(filteredOutElements);
@@ -179,7 +179,7 @@ const generateKey = (result) => {
 };
 
 function processSummaryFilter(filter, summaries) {
-    return summaries.filter(function (summary) {
+    return summaries.filter( summary => {
 
         // Sort mlaIds
         if (filter.mlaId &&
@@ -291,7 +291,7 @@ function SearchTable(props) {
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);        
+        setOrderBy(property);
     };
 
     const summaries = props.summaries;
@@ -315,7 +315,7 @@ function SearchTable(props) {
         setPage(0);
     };
 
-    // Move back the page number back to new maximum if 
+    // Move back the page number back to new maximum if
     // there are less filtered summaries now.
     if (page * rowsPerPage > filteredSummaries.length) {
         const newMax = Math.floor(filteredSummaries.length / rowsPerPage);
@@ -324,7 +324,6 @@ function SearchTable(props) {
 
     const mlaRows = generateMlaRows(
         filteredSummaries,
-        props.loading,
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
         order,

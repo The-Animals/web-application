@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-import { updateSummaryFilter } from '../actions/index.js';
+import { updateSummaryFilter } from '../actions/summaryTableActions';
 
 const mapStateToProps = state => {
     return {
