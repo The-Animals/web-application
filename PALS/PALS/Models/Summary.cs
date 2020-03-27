@@ -10,7 +10,8 @@ namespace PALS.Models
             MLAId = reader["MLAId"] as int? ?? -1;
             MLARank = reader["MLARank"] as int? ?? -1;
             PartyRank = reader["PartyRank"] as int? ?? -1;
-
+            Caucus = reader["Caucus"] as string ?? default(string);
+            
             if (DateTime.TryParse((string)reader["Date"], out var parsedDate))
             {
                 DocumentDate = parsedDate;
@@ -30,6 +31,8 @@ namespace PALS.Models
         public int MLARank { get; set; }
 
         public int PartyRank { get; set; }
+
+        public string Caucus { get; set; }
 
         public DateTime DocumentDate { get; set; }
 

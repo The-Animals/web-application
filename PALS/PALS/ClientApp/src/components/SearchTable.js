@@ -14,11 +14,11 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 
 import MLA from '../shared/carson.jpg';
-import { updateSummaryOffset } from '../actions';
+import { updateSummaryOffset } from '../actions/summaryTableActions';
 
 const mapStateToProps = state => {
     return {
-        summaries: state.summaries,
+        allSummaries: state.allSummaries,
         summaryFilter: state.summaryFilter,
         loading: state.loading
     };
@@ -167,7 +167,7 @@ const generateKey = (result) => {
 };
 
 function processSummaryFilter(filter, summaries) {
-    return summaries.filter(function (summary) {
+    return summaries.filter( summary => {
 
         // Sort mlaIds
         if (filter.mlaId &&
@@ -202,17 +202,7 @@ function processSummaryFilter(filter, summaries) {
     });
 }
 
-function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order, orderBy) {
-
-    if (loading) {
-        return (
-            <TableRow>
-                <TableCell align="left">
-                    {"Loading..."}
-                </TableCell>
-            </TableRow>
-        );
-    }
+function generateMlaRows(filteredSummaries, sliceStart, sliceEnd, order, orderBy) {
 
     if (filteredSummaries.length === 0) {
         return (
@@ -260,16 +250,6 @@ function SearchTable(props) {
         console.log("Sort me, ", order, orderBy);
     };
 
-    const summaries = props.summaries;
-    const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
-
-    if (summaries.length > 0 &&
-        filteredSummaries.length === 0 &&
-        !props.loading) {
-
-        props.updateSummaryOffset(1001);
-    }
-
     const [page, setPage] = React.useState(0);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -281,9 +261,50 @@ function SearchTable(props) {
         setPage(0);
     };
 
+    if (props.loading || props.allSummaries.length == 0) {
+        return (
+            <Paper>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={0}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+            <TableContainer>
+                <Table className={classes.table} aria-label="simple table">
+                    <EnhancedTableHead
+                        classes={classes}
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                        <TableRow>
+                            <TableCell align="left">
+                                {"Loading..."}
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Paper>
+        );
+    }
+
+    const summaries = props.allSummaries;
+    let filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);;
+    
+    if (summaries.length > 0 &&
+        filteredSummaries.length == 0 &&
+        !props.loading) {
+        props.updateSummaryOffset(1001);        
+    }        
+    
     const mlaRows = generateMlaRows(
         filteredSummaries,
-        props.loading,
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
         order,

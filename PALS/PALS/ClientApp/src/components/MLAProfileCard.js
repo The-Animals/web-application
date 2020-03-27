@@ -12,8 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import MLA from '../shared/carson.jpg';
 import Grid from '@material-ui/core/Grid';
 
-import { getData } from '../services/AjaxService.js';
-
 const mapStateToProps = state => {
     return { mla: state.mla };
 };
@@ -50,18 +48,7 @@ const useStyles = makeStyles({
 });
 
 function MLAProfileCard(props) {
-
-    var mlaId = parseInt(props.mla.mlaId) || 1;
     const classes = useStyles();
-
-    const [MLAData, setMLAData] = useState({});
-    useEffect(() => {
-        async function getMLAData() {
-            const MLAData = await getData('api/GetMLA', { RidingID: mlaId });
-            setMLAData(MLAData);
-        }
-        getMLAData();
-    }, [mlaId]);
 
     return (
         <Card className={classes.root} id="testing">
@@ -73,24 +60,24 @@ function MLAProfileCard(props) {
             <div className={classes.details}>
                 <CardContent>
                     <Typography className={classes.title} variant="h5" component="h2" gutterBottom>
-                        {MLAData.name}
+                        {props.mla.name}
                     </Typography>
                     <Typography className={classes.pos} color="textSecondary">
-                        {MLAData.riding}
+                        {props.mla.riding}
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Phone #:  <br />
-                                {MLAData.constituencyPhone} (Constituency Office) <br />
-                                {MLAData.legislaturePhone}  (Legislature Office) <br />
+                                {props.mla.constituencyPhone} (Constituency Office) <br />
+                                {props.mla.legislaturePhone}  (Legislature Office) <br />
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Email:  <br />
-                        {MLAData.email}
+                        {props.mla.email}
                     </Typography>
                 </CardContent>
                 <CardActions>
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-                        <Button className={classes.partyButton} size="small">{MLAData.party || ""}</Button>
+                        <Button className={classes.partyButton} size="small">{props.mla.party || ""}</Button>
                     </Grid>
                 </CardActions>
             </div>
