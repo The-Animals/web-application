@@ -1,18 +1,18 @@
 ﻿import {
-    FETCH_MLA_LIST_BEGIN, 
-    FETCH_MLA_LIST_SUCCESS, 
+    FETCH_MLA_LIST_BEGIN,
+    FETCH_MLA_LIST_SUCCESS,
     FETCH_MLA_LIST_ERROR
 } from '../constants/mlaListActionTypes.js';
 
 import {
-    FETCH_MLA_SUMMARIES_BEGIN, 
-    FETCH_MLA_SUMMARIES_SUCCESS, 
+    FETCH_MLA_SUMMARIES_BEGIN,
+    FETCH_MLA_SUMMARIES_SUCCESS,
     FETCH_MLA_SUMMARIES_ERROR
 } from '../constants/mlaSummariesActionTypes.js';
 
 import {
-    FETCH_MLA_PARTICIPATION_BEGIN, 
-    FETCH_MLA_PARTICIPATION_SUCCESS, 
+    FETCH_MLA_PARTICIPATION_BEGIN,
+    FETCH_MLA_PARTICIPATION_SUCCESS,
     FETCH_MLA_PARTICIPATION_ERROR
 } from '../constants/mlaParticipationActionTypes.js';
 
@@ -21,7 +21,8 @@ import {
     FETCH_SUMMARIES_SUCCESS,
     FETCH_SUMMARIES_FAILURE,
     UPDATE_SUMMARY_OFFSET,
-    UPDATE_SUMMARY_FILTER
+    UPDATE_SUMMARY_FILTER,
+    SET_FIRST_TIME_LOAD
 } from "../constants/summaryTableActionTypes.js";
 
 const MAX_SUMMARY_LIMIT = 10000;
@@ -42,7 +43,8 @@ const initialState = {
     },
     summaryOffset: 0,
     loading: false,
-    error: null
+    error: null,
+    firstTimeLoad: false,
 };
 
 function rootReducer(state = initialState, action) {
@@ -69,22 +71,24 @@ function rootReducer(state = initialState, action) {
         case FETCH_SUMMARIES_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_SUMMARIES_SUCCESS:
-            return { ...state, loading: false, allSummaries: action.payload.allSummaries };
+            return { ...state, loading: false, allSummaries: state.allSummaries.concat(action.payload.allSummaries) };
         case FETCH_SUMMARIES_FAILURE:
             return { ...state, loading: false, error: action.payload.error };
         case UPDATE_SUMMARY_FILTER:
             return { ...state, summaryFilter: action.payload.filter }
         case UPDATE_SUMMARY_OFFSET:
-            if (state.summaryOffset < MAX_SUMMARY_LIMIT) {
-                return { ...state, summaryOffset: state.summaryOffset + action.offset }
+            if (state.summaryOffset < MAX_SUMMARY_LIMIT) {                
+                return { ...state, summaryOffset: state.summaryOffset + action.payload.offset }
             } else {
                 return { ...state, summaryOffset: state.summaryOffset }
             }
-    
+        case SET_FIRST_TIME_LOAD:
+            return { ...state, firstTimeLoad: true };
+
         default:
             return state;
     }
 
 }
 
-export default rootReducer; 
+export default rootReducer;

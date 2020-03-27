@@ -12,6 +12,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
+import Skeleton from '@material-ui/lab/Skeleton';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import MLA from '../shared/carson.jpg';
 import { updateSummaryOffset } from '../actions/summaryTableActions';
@@ -97,14 +99,24 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
+function stableSort(array, comparator) {    
+
+    // For PartyRank, need to filter out -1 values from array
+    // so they aren't sorted.
+    const filteredOutElements = array.filter(function (el) {
+        return el.partyRank === -1;
+    });
+    const filteredElements = array.filter(x => !filteredOutElements.includes(x));    
+
+    const stabilizedThis = filteredElements.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
+    });    
+
+    // Append the filtered out elements again.
+    return stabilizedThis.map(el => el[0]).concat(filteredOutElements);
 }
 
 const headCells = [
@@ -202,7 +214,37 @@ function processSummaryFilter(filter, summaries) {
     });
 }
 
-function generateMlaRows(filteredSummaries, sliceStart, sliceEnd, order, orderBy) {
+function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order, orderBy) {
+
+    if (loading) {
+        return (
+            <TableRow>
+                <TableCell>
+                    <Skeleton variant="rect" width={150} height={200} />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                    <Skeleton animation="wave" />
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" width={400} />
+                    <Skeleton animation="wave" width={400} />
+                    <Skeleton animation="wave" width={400} />
+                </TableCell>
+            </TableRow>
+        );
+    }
 
     if (filteredSummaries.length === 0) {
         return (
@@ -212,7 +254,7 @@ function generateMlaRows(filteredSummaries, sliceStart, sliceEnd, order, orderBy
                 </TableCell>
             </TableRow>
         );
-    }
+    }    
 
     return stableSort(filteredSummaries, getComparator(order, orderBy))
         .slice(sliceStart, sliceEnd)
@@ -220,18 +262,21 @@ function generateMlaRows(filteredSummaries, sliceStart, sliceEnd, order, orderBy
             <TableRow key={generateKey(result)}>
                 <PersonTableCell component="th" scope="row">
                     <img src={MLA} alt={result.name} width="120px" height="150px" />
+                    {result.name}
                 </PersonTableCell>
                 <TableCell>
                     {result.mlaRank}
                 </TableCell>
                 <TableCell>
-                    {result.partyRank}
+                    {result.partyRank === -1 ? "N/A" : result.partyRank}
                 </TableCell>
                 <TableCell>
                     {new Date(result.documentDate).toLocaleDateString('en-US')}
                 </TableCell>
                 <TableCell align="left">
                     {result.text}
+                    <br />
+                    <a href={result.documentUrl}>{" Go to document"}<ChevronRightIcon /></a>
                 </TableCell>
             </TableRow>
         );
@@ -247,8 +292,17 @@ function SearchTable(props) {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
-        console.log("Sort me, ", order, orderBy);
     };
+
+    const summaries = props.allSummaries;
+    const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);    
+
+    if (summaries.length > 0 &&
+        filteredSummaries.length === 0 &&
+        !props.loading) {
+
+        props.updateSummaryOffset(1001);
+    }    
 
     const [page, setPage] = React.useState(0);
     const handleChangePage = (event, newPage) => {
@@ -261,54 +315,20 @@ function SearchTable(props) {
         setPage(0);
     };
 
-    if (props.loading || props.allSummaries.length == 0) {
-        return (
-            <Paper>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={0}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
-            <TableContainer>
-                <Table className={classes.table} aria-label="simple table">
-                    <EnhancedTableHead
-                        classes={classes}
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                    />
-                    <TableBody>
-                        <TableRow>
-                            <TableCell align="left">
-                                {"Loading..."}
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
-        );
+    // Move back the page number back to new maximum if
+    // there are less filtered summaries now.
+    if (page * rowsPerPage > filteredSummaries.length) {
+        const newMax = Math.floor(filteredSummaries.length / rowsPerPage);
+        setPage(newMax);
     }
 
-    const summaries = props.allSummaries;
-    let filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);;
-    
-    if (summaries.length > 0 &&
-        filteredSummaries.length == 0 &&
-        !props.loading) {
-        props.updateSummaryOffset(1001);        
-    }        
-    
     const mlaRows = generateMlaRows(
         filteredSummaries,
+        props.loading,
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
         order,
-        orderBy);
+        orderBy);    
 
     return (
         <Paper>
