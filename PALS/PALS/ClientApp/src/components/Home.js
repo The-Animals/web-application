@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import { Summary } from './Summary';
-import { Map } from './Map';
+import MapBox from './Map';
+import InteractiveGraph from './InteractiveGraph';
 import { fetchMlas } from "../actions/mlaListActions";
 
 const mapStateToProps = state => {
@@ -28,16 +29,19 @@ class Home extends Component {
     return (
         <div style={{height: '100%'}}>
             <div className="container" style={{height: '100%'}}>
-                <div className="row" style={{height: '100%'}}>
-
+                <div className="row" style={{height: '70%'}}>
                     <div className="col-sm" style={{height: '100%'}}>
-
+                        <MapBox />
                     </div>
 
                     <div className="col-sm" style={{height: '100%'}}>
                         <Summary></Summary>
                     </div>
-
+                </div>
+                <div className="row" style={{height: '30%'}}>
+                    <div className="col-sm" style={{height: '100%'}}>
+                            <InteractiveGraph/>
+                    </div>
                 </div>
             </div>
         </div>

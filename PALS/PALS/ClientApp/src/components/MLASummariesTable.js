@@ -20,7 +20,7 @@ import clsx from 'clsx';
 
 const mapStateToProps = state => {
     return { 
-        summaries: state.summaries
+        mlaSummaries: state.mlaSummaries
     };
 };
 
@@ -69,7 +69,7 @@ function MLASummariesTable(props) {
                   <TableHead>
                   </TableHead>
                   <TableBody>
-                      {props.summaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+                      {props.mlaSummaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
                           <TableRow key={row.mlaRank} className={classes.row}>
                               <TableCell align="left">
                                   {row.mlaRank}
@@ -85,7 +85,7 @@ function MLASummariesTable(props) {
           <TablePagination
             rowsPerPageOptions={[1, 2, 3, 4, 5]}
             component="div"
-            count={props.summaries.length}
+            count={props.mlaSummaries.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
