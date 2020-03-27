@@ -105,7 +105,7 @@ class MapBox extends Component {
             map.on('click', 'state-fills', function (e) {
                 if (this.hoveredStateId) {
                     const mlaId = e.features[0].properties.EDNumber20;
-                    
+
                     self.props.viewMLA({ mlaId });
 
                 }
@@ -139,17 +139,17 @@ class MapBox extends Component {
 class Home extends Component {
     static displayName = Home.name;
 
-    async componentDidMount() {        
+    async componentDidMount() {
         const response = await fetch('api/mla/all');
         const results = await response.json();
-        this.props.updateMlas(results);   
+        this.props.updateMlas(results);
     }
 
     render() {
     return (
         <div style={{height: '100%'}}>
             <div className="container" style={{height: '100%'}}>
-                <div className="row" style={{height: '100%'}}>
+                <div className="row" style={{height: '100%', paddingTop: 50}}>
 
                     <div className="col-sm" style={{height: '100%'}}>
 

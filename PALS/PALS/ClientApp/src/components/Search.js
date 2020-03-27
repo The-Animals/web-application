@@ -49,10 +49,9 @@ class Search extends Component {
     render() {
     return (
         <div>
-        <h1>Search</h1>
 
-            <div className="container">
-
+            <div className="container" style={{height: '100%', paddingTop: 50}}>
+              <h1>Search</h1>
                 <div className="row">
                     <SearchWithFilters></SearchWithFilters>
                 </div>
