@@ -50,7 +50,7 @@ function mapMlasToObject(mlas) {
 }
 
 function SearchWithFilters(props) {
-    const classes = useStyles();
+    const classes = useStyles();    
 
     const [mla, setMla] = useState(0);
     const handleMlaChange = event => {           
@@ -73,18 +73,19 @@ function SearchWithFilters(props) {
     };
 
     const [party, setParty] = useState("ALL");
-    const handlePartyChange = (event, newParty) => {
+    const handlePartyChange = (event, newParty) => {        
 
         if (newParty !== null) {
-            setParty(newParty);            
+            setParty(newParty);           
+
+            var mlas = mapMlasToObject(props.mlas);
+            var selectedMLA = mlas[mla];
+
+            if (newParty !== "ALL" && selectedMLA.party !== newParty) {
+                setMla(props.mlas[0].id);
+            }
         }
 
-        var mlas = mapMlasToObject(props.mlas);
-        var selectedMLA = mlas[mla];  
-
-        if (newParty !== "ALL" && selectedMLA.party !== newParty) {            
-            setMla(props.mlas[0].id);
-        }
     };
    
     var filteredMLAs = filterMLAsByParty(props.mlas, party);

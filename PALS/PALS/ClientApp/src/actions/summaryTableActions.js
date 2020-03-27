@@ -3,7 +3,8 @@
     FETCH_SUMMARIES_SUCCESS,
     FETCH_SUMMARIES_FAILURE,
     UPDATE_SUMMARY_FILTER,
-    UPDATE_SUMMARY_OFFSET
+    UPDATE_SUMMARY_OFFSET,
+    SET_FIRST_TIME_LOAD
 } from "../constants/summaryTableActionTypes.js";
 
 export const fetchSummariesBegin = () => ({
@@ -42,6 +43,10 @@ export function fetchSummaries() {
             })
             .catch(error => dispatch(fetchSummariesFailure(error)));
     };
+}
+
+export function setFirstTimeLoad() {
+    return { type: SET_FIRST_TIME_LOAD }
 }
 
 // Handle HTTP errors since fetch won't.

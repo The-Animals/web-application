@@ -99,21 +99,21 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort(array, comparator) {
+function stableSort(array, comparator) {    
 
     // For PartyRank, need to filter out -1 values from array
     // so they aren't sorted.
     const filteredOutElements = array.filter(function (el) {
         return el.partyRank === -1;
     });
-    const filteredElements = array.filter(x => !filteredOutElements.includes(x));
+    const filteredElements = array.filter(x => !filteredOutElements.includes(x));    
 
     const stabilizedThis = filteredElements.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
-    });
+    });    
 
     // Append the filtered out elements again.
     return stabilizedThis.map(el => el[0]).concat(filteredOutElements);
@@ -254,7 +254,7 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
                 </TableCell>
             </TableRow>
         );
-    }
+    }    
 
     return stableSort(filteredSummaries, getComparator(order, orderBy))
         .slice(sliceStart, sliceEnd)
@@ -294,15 +294,15 @@ function SearchTable(props) {
         setOrderBy(property);
     };
 
-    const summaries = props.summaries;
-    const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);
+    const summaries = props.allSummaries;
+    const filteredSummaries = processSummaryFilter(props.summaryFilter, summaries);    
 
     if (summaries.length > 0 &&
         filteredSummaries.length === 0 &&
         !props.loading) {
 
         props.updateSummaryOffset(1001);
-    }
+    }    
 
     const [page, setPage] = React.useState(0);
     const handleChangePage = (event, newPage) => {
@@ -324,10 +324,11 @@ function SearchTable(props) {
 
     const mlaRows = generateMlaRows(
         filteredSummaries,
+        props.loading,
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
         order,
-        orderBy);
+        orderBy);    
 
     return (
         <Paper>

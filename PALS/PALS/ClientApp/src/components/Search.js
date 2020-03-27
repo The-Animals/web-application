@@ -5,7 +5,7 @@ import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
 import { fetchMlas } from '../actions/mlaListActions.js';
-import { fetchSummaries } from '../actions/summaryTableActions';
+import { fetchSummaries, setFirstTimeLoad } from '../actions/summaryTableActions';
 
 
 const mapStateToProps = state => {
@@ -19,7 +19,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchMlas: () => dispatch(fetchMlas()),
-        fetchSummaries: () => dispatch(fetchSummaries())
+        fetchSummaries: () => dispatch(fetchSummaries()),
+        setFirstTimeLoad: () => dispatch(setFirstTimeLoad())
     };
 }
 
@@ -30,7 +31,7 @@ class Search extends Component {
 
         // Fetch mlas if not already loaded.
         if (this.props.mlas.length === 0) {
-            await fetchMlas(this.props);
+            await this.props.fetchMlas(this.props);
         }
 
         this.props.setFirstTimeLoad();

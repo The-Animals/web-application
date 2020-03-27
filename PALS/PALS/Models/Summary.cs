@@ -22,6 +22,11 @@ namespace PALS.Models
             }                  
             
             DocumentUrl = reader["Url"] as string ?? default(string);
+
+            string firstname = reader["FirstName"] as string ?? default(string);
+            string lastname = reader["LastName"] as string ?? default(string);
+            Name = $"{firstname} {lastname}";
+
         }
 
         public string Text { get; set; }
@@ -33,6 +38,8 @@ namespace PALS.Models
         public int PartyRank { get; set; }
 
         public string Caucus { get; set; }
+
+        public string Name { get; set; }
 
         public DateTime DocumentDate { get; set; }
 
