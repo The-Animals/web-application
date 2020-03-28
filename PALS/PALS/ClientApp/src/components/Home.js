@@ -32,7 +32,7 @@ class Home extends Component {
     }
 
     componentWillReceiveProps(props) {
-        if (Object.keys(this.props.mla).length === 0) {
+        if (Object.keys(props.mla).length === 0) {
             const mla = props.mlas.slice(1, props.mlas.length)[Math.floor(Math.random() * props.mlas.length)];
             this.props.fetchMlaSummaries(mla.id);
             this.props.fetchMlaParticipation(mla.id);
