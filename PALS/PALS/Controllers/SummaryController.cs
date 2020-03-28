@@ -20,7 +20,7 @@ namespace PALS.Controllers
 
         [Route("{mlaId}/{n?}")]
         [HttpGet]
-        public async Task<List<Summary>> GetSummariesMLA(int mlaId, int n = 500)
+        public async Task<List<Summary>> GetSummariesMLA(int mlaId, int n = 1000)
         {            
             return await databaseService.GetMLASummaries(mlaId, n);
         }

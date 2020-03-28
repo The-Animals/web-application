@@ -1,7 +1,8 @@
 import { 
     FETCH_MLA_SUMMARIES_BEGIN, 
     FETCH_MLA_SUMMARIES_SUCCESS, 
-    FETCH_MLA_SUMMARIES_ERROR
+    FETCH_MLA_SUMMARIES_ERROR,
+    SET_MLA_SUMMARY_DATE_FILTER
 } from '../constants/mlaSummariesActionTypes.js';
 
 export const fetchMlaSummariesBegin = () => ({ 
@@ -17,6 +18,11 @@ export const fetchMlaSummariesError = error => ({
     type: FETCH_MLA_SUMMARIES_ERROR, 
     payload: { error }
 });
+
+export const setMlaSummaryDateFilter = mlaSummaryDateFilter => ({
+    type: SET_MLA_SUMMARY_DATE_FILTER, 
+    payload: { mlaSummaryDateFilter }
+})
 
 export function fetchMlaSummaries(mlaId) {
     return (dispatch) => {

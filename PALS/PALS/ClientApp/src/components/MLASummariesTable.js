@@ -20,7 +20,8 @@ import clsx from 'clsx';
 
 const mapStateToProps = state => {
     return { 
-        mlaSummaries: state.mlaSummaries
+        mlaSummaries: state.mlaSummaries,
+        mlaSummaryDateFilter: state.mlaSummaryDateFilter
     };
 };
 
@@ -41,7 +42,7 @@ function MLASummariesTable(props) {
     const classes = useStyles();
 
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(2);
+    const [rowsPerPage, setRowsPerPage] = React.useState(1);
 
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -52,15 +53,21 @@ function MLASummariesTable(props) {
       setPage(0);
     };
 
-    const StyledTableCell = withStyles(theme => ({
-      head: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-      },
-      body: {
-        fontSize: 18,
-      },
-    }))(TableCell);
+    const filterSummaries = summaries => { 
+        if (props.mlaSummaryDateFilter.length === 0) 
+        {
+            return summaries;
+        }
+        else 
+        { 
+            return summaries.filter(s => {
+                const sDate = new Date(s.documentDate).getTime();
+                return props.mlaSummaryDateFilter.includes(sDate);
+            });
+        }
+    }
+
+    var summaries = filterSummaries(props.mlaSummaries);
 
     return (
         <Paper className={classes.paper}>
@@ -69,7 +76,7 @@ function MLASummariesTable(props) {
                   <TableHead>
                   </TableHead>
                   <TableBody>
-                      {props.mlaSummaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+                      {summaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
                           <TableRow key={row.mlaRank} className={classes.row}>
                               <TableCell align="left">
                                   {row.mlaRank}
@@ -85,7 +92,7 @@ function MLASummariesTable(props) {
           <TablePagination
             rowsPerPageOptions={[1, 2, 3, 4, 5]}
             component="div"
-            count={props.mlaSummaries.length}
+            count={summaries.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
