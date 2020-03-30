@@ -6,7 +6,7 @@ import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 import { mlaSelected } from '../actions/mlaListActions';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazdma3lncWUwM3lpM2RwY253MjJ3YnJ2In0.S7gtSVOss4OlSZXWh3D2QA';
+mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazhmMXJmdWgwMjd6M21wZHc1bWFxeWRtIn0.ptbqpiRLFxgKwJO_NIsvxg';
 
 const mapStateToProps = state => {
     return {
