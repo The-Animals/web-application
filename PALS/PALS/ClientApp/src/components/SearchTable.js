@@ -178,6 +178,18 @@ const generateKey = (result) => {
     return result.mlaRank + '_' + result.mlaId;
 };
 
+const getImage = (name) =>  {
+    if (name == undefined) 
+    {
+        return "";
+    }
+    else 
+    {
+        var replaced = name.split(' ').join('_');
+        return 'http://162.246.157.124/'+ replaced + '.jpg';
+    }
+}
+
 function processSummaryFilter(filter, summaries) {
     return summaries.filter( summary => {
 
@@ -261,7 +273,7 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
         .map(result =>
             <TableRow key={generateKey(result)}>
                 <PersonTableCell component="th" scope="row">
-                    <img src={MLA} alt={result.name} width="120px" height="150px" />
+                    <img src={getImage(result.name)} alt={result.name} width="120px" height="150px" />
                     {result.name}
                 </PersonTableCell>
                 <TableCell>

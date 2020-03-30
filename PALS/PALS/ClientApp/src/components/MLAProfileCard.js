@@ -50,12 +50,24 @@ const useStyles = makeStyles({
 function MLAProfileCard(props) {
     const classes = useStyles();
 
+    const getImage = () =>  {
+        if (Object.keys(props.mla).length === 0)
+        {
+            return "";
+        }
+        else 
+        {
+            var replaced = props.mla.name.split(' ').join('_');
+            return 'http://162.246.157.124/'+ replaced + '.jpg';
+        }
+    }
+
     return (
         <Card className={classes.root} id="testing">
             <CardMedia
                 className={classes.img}
-                image={MLA}
-                title="Carson, Member Jon (NDP)"
+                image={getImage()}
+                title={props.mla.name}
             />
             <div className={classes.details}>
                 <CardContent>
