@@ -17,10 +17,12 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import TablePagination from '@material-ui/core/TablePagination';
 import clsx from 'clsx';
 
-import { getData } from '../services/AjaxService.js';
 
 const mapStateToProps = state => {
-    return { mla: state.mla };
+    return { 
+        mlaSummaries: state.mlaSummaries,
+        mlaSummaryDateFilter: state.mlaSummaryDateFilter
+    };
 };
 
 const useStyles = makeStyles({
@@ -37,22 +39,10 @@ const useStyles = makeStyles({
 });
 
 function MLASummariesTable(props) {
-
-    const mlaId = parseInt(props.mla.mlaId) || 1;
     const classes = useStyles();
 
-    const [MLASummaries, setMLASummaries] = useState([]);
-    useEffect(() => {
-        async function getMLASummaries() {
-            const MLASummaries = await getData('api/summary/mla/' + mlaId + '/500');
-            setMLASummaries(MLASummaries);
-            console.log(MLASummaries);
-        }
-        getMLASummaries();
-    }, [mlaId]);
-
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(2);
+    const [rowsPerPage, setRowsPerPage] = React.useState(1);
 
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -63,15 +53,21 @@ function MLASummariesTable(props) {
       setPage(0);
     };
 
-    const StyledTableCell = withStyles(theme => ({
-      head: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-      },
-      body: {
-        fontSize: 18,
-      },
-    }))(TableCell);
+    const filterSummaries = summaries => { 
+        if (props.mlaSummaryDateFilter.length === 0) 
+        {
+            return summaries;
+        }
+        else 
+        { 
+            return summaries.filter(s => {
+                const sDate = new Date(s.documentDate).getTime();
+                return props.mlaSummaryDateFilter.includes(sDate);
+            });
+        }
+    }
+
+    var summaries = filterSummaries(props.mlaSummaries);
 
     return (
         <Paper className={classes.paper}>
@@ -80,7 +76,7 @@ function MLASummariesTable(props) {
                   <TableHead>
                   </TableHead>
                   <TableBody>
-                      {MLASummaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+                      {summaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
                           <TableRow key={row.mlaRank} className={classes.row}>
                               <TableCell align="left">
                                   {row.mlaRank}
@@ -96,7 +92,7 @@ function MLASummariesTable(props) {
           <TablePagination
             rowsPerPageOptions={[1, 2, 3, 4, 5]}
             component="div"
-            count={MLASummaries.length}
+            count={summaries.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

@@ -4,29 +4,24 @@ import { connect } from "react-redux";
 import SearchTable from './SearchTable';
 import SearchWithFilters from './SearchWithFilters';
 
-import { updateSummaries } from '../actions/index.js';
-import { updateMlas } from '../actions/index.js';
-import { fetchSummaries } from '../actions/fetchActions';
+import { fetchMlas } from '../actions/mlaListActions.js';
+import { fetchSummaries, setFirstTimeLoad } from '../actions/summaryTableActions';
+
 
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
         summaryOffset: state.summaryOffset,
+        firstTimeLoad: state.firstTimeLoad,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateSummaries: results => dispatch(updateSummaries(results)),
-        updateMlas: mlas => dispatch(updateMlas(mlas)),
-        fetchSummaries: () => dispatch(fetchSummaries())
+        fetchMlas: () => dispatch(fetchMlas()),
+        fetchSummaries: () => dispatch(fetchSummaries()),
+        setFirstTimeLoad: () => dispatch(setFirstTimeLoad())
     };
-}
-
-async function fetchMlas(props) {
-    const responseMlas = await fetch('api/mla/all');
-    const resultMlas = await responseMlas.json();
-    props.updateMlas(resultMlas);
 }
 
 class Search extends Component {
@@ -36,14 +31,22 @@ class Search extends Component {
 
         // Fetch mlas if not already loaded.
         if (this.props.mlas.length === 0) {
-            await fetchMlas(this.props);
-        } else {
-            this.props.fetchSummaries();
+            await this.props.fetchMlas(this.props);
         }
+
+        this.props.setFirstTimeLoad();
+
     }
 
-    async componentDidUpdate() {
-        this.props.fetchSummaries();
+    async componentDidUpdate(prevProps, prevState) {
+
+        // Only fetch if summary offset or first time load changes.
+        if (prevProps.summaryOffset !== this.props.summaryOffset ||
+            prevProps.firstTimeLoad !== this.props.firstTimeLoad)
+        {
+            this.props.fetchSummaries();
+        }
+
     }
 
     render() {

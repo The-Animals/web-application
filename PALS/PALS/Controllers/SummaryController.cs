@@ -20,7 +20,7 @@ namespace PALS.Controllers
 
         [Route("{mlaId}/{n?}")]
         [HttpGet]
-        public async Task<List<Summary>> GetSummariesMLA(int mlaId, int n = 500)
+        public async Task<List<Summary>> GetSummariesMLA(int mlaId, int n = 1000)
         {            
             return await databaseService.GetMLASummaries(mlaId, n);
         }
@@ -30,6 +30,12 @@ namespace PALS.Controllers
         public async Task<List<Summary>> GetAllSummaries(int n = 50000, int offset = 0) 
         {
             return await databaseService.GetAllSummaries(n, offset);
+        }
+
+        [Route("participation/{mlaId}")]
+        [HttpGet]
+        public async Task<List<Participation>> GetParticipationTimeSeries(int mlaId) {
+            return await databaseService.GetParticipationData(mlaId);
         }
     }
 }

@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-import { updateSummaryFilter } from '../actions/index.js';
+import { updateSummaryFilter } from '../actions/summaryTableActions';
 
 const mapStateToProps = state => {
     return {
@@ -50,7 +50,7 @@ function mapMlasToObject(mlas) {
 }
 
 function SearchWithFilters(props) {
-    const classes = useStyles();
+    const classes = useStyles();    
 
     const [mla, setMla] = useState(0);
     const handleMlaChange = event => {           
@@ -73,21 +73,35 @@ function SearchWithFilters(props) {
     };
 
     const [party, setParty] = useState("ALL");
-    const handlePartyChange = (event, newParty) => {
+    const handlePartyChange = (event, newParty) => {        
 
         if (newParty !== null) {
-            setParty(newParty);            
+            setParty(newParty);           
+
+            var mlas = mapMlasToObject(props.mlas);
+            var selectedMLA = mlas[mla];
+
+            if (newParty !== "ALL" && selectedMLA.party !== newParty) {
+                setMla(props.mlas[0].id);
+            }
         }
 
-        var mlas = mapMlasToObject(props.mlas);
-        var selectedMLA = mlas[mla];  
-
-        if (newParty !== "ALL" && selectedMLA.party !== newParty) {            
-            setMla(props.mlas[0].id);
-        }
     };
    
     var filteredMLAs = filterMLAsByParty(props.mlas, party);
+
+    useEffect(() => {
+        const timeOutId = setTimeout(() =>
+            props.updateSummaryFilter({
+                mlaId: mla,
+                caucus: party,
+                startDate: startDate,
+                endDate: endDate,
+                query: query,
+            }),
+            500);
+        return () => clearTimeout(timeOutId);
+    }, [query]);
 
     useEffect(() => {
         props.updateSummaryFilter({
@@ -97,7 +111,7 @@ function SearchWithFilters(props) {
             endDate: endDate,
             query: query,
         });     
-    }, [query, mla, party, startDate, endDate]);
+    }, [mla, party, startDate, endDate]);
 
     // TODO: Replace native date pickers with material-ui/pickers
     return (
