@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { NavMenu } from './NavMenu';
+import { NavMenu } from './NavMenu'
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -8,8 +8,8 @@ export class Layout extends Component {
   render () {
     return (
       <div>
-        <NavMenu style={{height: "20vh"}}/>
-        <Container style={{height: "80vh"}}>
+        <NavMenu/>
+        <Container style={{height: "100vh"}}>
           {this.props.children}
         </Container>
       </div>

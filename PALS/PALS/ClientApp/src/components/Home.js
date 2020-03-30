@@ -28,6 +28,7 @@ class Home extends Component {
     static displayName = Home.name;
 
     componentDidMount() {
+
         this.props.fetchMlas();
     }
 
@@ -44,7 +45,9 @@ class Home extends Component {
     return (
         <div style={{height: '100%'}}>
             <div className="container" style={{height: '100%'}}>
+
                 <div className="row" style={{height: '65%'}}>
+
                     <div className="col-sm" style={{height: '100%'}}>
                         <MapBox />
                     </div>
