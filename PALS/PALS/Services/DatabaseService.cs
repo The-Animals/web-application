@@ -131,7 +131,8 @@ namespace PALS.Services
             var sql = @"SELECT *
 						FROM db.all_summaries
                         INNER JOIN db.mlas ON db.all_summaries.MLAId = db.mlas.id
-						LIMIT @N
+						ORDER BY MlaRank
+                        LIMIT @N
                         OFFSET @offset";
 
             MySqlParameter[] parameters = {
