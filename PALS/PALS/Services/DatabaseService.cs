@@ -154,8 +154,8 @@ namespace PALS.Services
             var participations = new List<Participation>();
 
             var sql = @"SELECT d.Date, count(s.Sentence) as Quantity
-                        LEFT JOIN db.summaries_@MLA_ID s ON d.Id = s.DocumentId
                         FROM db.documents d
+                        LEFT JOIN db.summaries_@MLA_ID s ON d.Id = s.DocumentId
                         GROUP BY d.Date;";
             
             MySqlParameter[] parameters = {

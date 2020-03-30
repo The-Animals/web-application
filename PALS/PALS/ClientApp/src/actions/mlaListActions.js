@@ -1,7 +1,8 @@
 ﻿import {
-    FETCH_MLA_LIST_BEGIN, 
-    FETCH_MLA_LIST_SUCCESS, 
-    FETCH_MLA_LIST_ERROR
+    FETCH_MLA_LIST_BEGIN,
+    FETCH_MLA_LIST_SUCCESS,
+    FETCH_MLA_LIST_ERROR,
+    MLA_SELECTED
 } from '../constants/mlaListActionTypes';
 
 export const fetchMlaListBegin = () => ({ 
@@ -17,6 +18,11 @@ export const fetchMlaListError = error => ({
     type: FETCH_MLA_LIST_ERROR, 
     payload: { error }
 });
+
+export const mlaSelected = mla => ({
+    type: MLA_SELECTED,
+    payload: { mla }
+})
 
 export function fetchMlas() {
     return (dispatch) => {

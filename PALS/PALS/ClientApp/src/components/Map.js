@@ -4,6 +4,9 @@ import mapboxgl from 'mapbox-gl';
 
 import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
+import { mlaSelected } from '../actions/mlaListActions';
+
+mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazdma3lncWUwM3lpM2RwY253MjJ3YnJ2In0.S7gtSVOss4OlSZXWh3D2QA';
 
 const mapStateToProps = state => {
     return {
@@ -14,7 +17,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchMlaSummaries: mlaId => dispatch(fetchMlaSummaries(mlaId)),
-        fetchMlaParticipation: mlaId => dispatch(fetchMlaParticipation(mlaId))
+        fetchMlaParticipation: mlaId => dispatch(fetchMlaParticipation(mlaId)),
+        mlaSelected: mla => dispatch(mlaSelected(mla))
     }
 }
 
@@ -25,7 +29,6 @@ class MapBox extends Component {
             lng: -115.8155,
             lat: 55.3337,
             zoom: 4.08,
-            props: props
         };
         this.hoveredStateId = null;
     }
@@ -108,10 +111,11 @@ class MapBox extends Component {
 
             map.on('click', 'state-fills', function (e) {
                 if (this.hoveredStateId) {
-                    const ridingId = e.features[0].properties.EDNumber20;
-                    const mla = this.state.mlas.find(mla => mla.ridingId == ridingId);
-                    this.props.fetchMlaSummaries(mla.id); 
-                    this.props.fetchMlaSummaries(mla.id);
+                    const ridingNumber = e.features[0].properties.EDNumber20;
+                    const mla = self.props.mlas.find(mla => mla.ridingNumber == ridingNumber);
+                    self.props.fetchMlaSummaries(mla.id);
+                    self.props.fetchMlaParticipation(mla.id);
+                    self.props.mlaSelected(mla);
                 }
 
             });
@@ -139,7 +143,7 @@ class MapBox extends Component {
     }
 }
 
-connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(MapBox);

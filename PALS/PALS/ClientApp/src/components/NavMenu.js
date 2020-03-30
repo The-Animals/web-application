@@ -29,7 +29,7 @@ export class NavMenu extends Component {
                 <Container>      
                     
                 <NavbarBrand tag={Link} to="/">
-                    <img src={logo} width="200px" height="114px" alt="PALS Logo" />
+                    <img src={logo} width="100px" height="57px" alt="PALS Logo" />
                 </NavbarBrand>
 
                 <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />

@@ -1,13 +1,15 @@
 ﻿import {
     FETCH_MLA_LIST_BEGIN,
     FETCH_MLA_LIST_SUCCESS,
-    FETCH_MLA_LIST_ERROR
+    FETCH_MLA_LIST_ERROR,
+    MLA_SELECTED
 } from '../constants/mlaListActionTypes.js';
 
 import {
-    FETCH_MLA_SUMMARIES_BEGIN,
-    FETCH_MLA_SUMMARIES_SUCCESS,
-    FETCH_MLA_SUMMARIES_ERROR
+    FETCH_MLA_SUMMARIES_BEGIN, 
+    FETCH_MLA_SUMMARIES_SUCCESS, 
+    FETCH_MLA_SUMMARIES_ERROR,
+    SET_MLA_SUMMARY_DATE_FILTER
 } from '../constants/mlaSummariesActionTypes.js';
 
 import {
@@ -31,6 +33,7 @@ const initialState = {
     mlas: [],
     mla: {},
     mlaSummaries: [],
+    mlaSummaryDateFilter: [],
     mlaParticipation: [],
     allSummaries: [],
     summaryFilter:
@@ -56,12 +59,16 @@ function rootReducer(state = initialState, action) {
             return { ...state, loading: false , mlas: action.payload.mlas};
         case FETCH_MLA_LIST_ERROR:
             return { ...state, loading: false, error: action.payload.error };
+        case MLA_SELECTED: 
+            return { ...state, mla: action.payload.mla };
         case FETCH_MLA_SUMMARIES_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_MLA_SUMMARIES_SUCCESS:
             return { ...state, loading: false, mlaSummaries: action.payload.mlaSummaries };
         case FETCH_MLA_SUMMARIES_ERROR:
             return { ...state, loading: false, error: action.payload.error };
+        case SET_MLA_SUMMARY_DATE_FILTER: 
+            return { ...state, mlaSummaryDateFilter: action.payload.mlaSummaryDateFilter }
         case FETCH_MLA_PARTICIPATION_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_MLA_PARTICIPATION_SUCCESS:
