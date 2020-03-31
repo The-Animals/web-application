@@ -9,7 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import MLA from '../shared/carson.jpg';
+import Default_MLA from '../shared/Default_MLA.jpg';
 import Grid from '@material-ui/core/Grid';
 
 const mapStateToProps = state => {
@@ -53,7 +53,7 @@ function MLAProfileCard(props) {
     const getImage = () =>  {
         if (Object.keys(props.mla).length === 0)
         {
-            return "";
+            return Default_MLA;
         }
         else 
         {

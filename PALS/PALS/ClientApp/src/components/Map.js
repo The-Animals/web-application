@@ -6,7 +6,7 @@ import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 import { mlaSelected } from '../actions/mlaListActions';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazdma3lncWUwM3lpM2RwY253MjJ3YnJ2In0.S7gtSVOss4OlSZXWh3D2QA';
+mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazhmMXJmdWgwMjd6M21wZHc1bWFxeWRtIn0.ptbqpiRLFxgKwJO_NIsvxg';
 
 const mapStateToProps = state => {
     return {
@@ -35,13 +35,25 @@ class MapBox extends Component {
 
     componentDidMount() {
 
+        var bounds = [
+            [-125.48164075084577, 47.461008199748875], // Southwest coordinates
+            [-106.14935924915302, 61.90289294926896] // Northeast coordinates
+        ];
+
         const self = this;
         const map = new mapboxgl.Map({
             container: this.mapContainer,
             style: 'mapbox://styles/mapbox/streets-v11',
             center: [this.state.lng, this.state.lat],
-            zoom: this.state.zoom
+            zoom: this.state.zoom,
+            maxBounds: bounds
         });
+
+        // disable map rotation using right click + drag
+        map.dragRotate.disable();
+
+        // disable map rotation using touch rotation gesture
+        map.touchZoomRotate.disableRotation();
 
         map.on('load', () => {
             map.addSource('states', {
@@ -57,12 +69,12 @@ class MapBox extends Component {
                 'source-layer': '2019Boundaries_ED-Shapefiles-2nzdq4',
                 'layout': {},
                 'paint': {
-                    'fill-color': '#627BC1',
+                    'fill-color': '#0D3692',
                     'fill-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'hover'], false],
-                        1,
-                        0.5
+                        0.8,
+                        0.3
                     ]
                 }
             });
@@ -74,8 +86,8 @@ class MapBox extends Component {
                 'source-layer': '2019Boundaries_ED-Shapefiles-2nzdq4',
                 'layout': {},
                 'paint': {
-                    'line-color': '#627BC1',
-                    'line-width': 2
+                    'line-color': '#FEBA35',
+                    'line-width': 1
                 }
             });
 
@@ -112,7 +124,7 @@ class MapBox extends Component {
             map.on('click', 'state-fills', function (e) {
                 if (this.hoveredStateId) {
                     const ridingNumber = e.features[0].properties.EDNumber20;
-                    const mla = self.props.mlas.find(mla => mla.ridingNumber == ridingNumber);
+                    const mla = self.props.mlas.find(mla => mla.ridingNumber === ridingNumber);
                     self.props.fetchMlaSummaries(mla.id);
                     self.props.fetchMlaParticipation(mla.id);
                     self.props.mlaSelected(mla);

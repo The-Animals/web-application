@@ -16,8 +16,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
 import HomeIcon from '@material-ui/icons/Home';
-import TocIcon from '@material-ui/icons/Toc';
-import MapIcon from '@material-ui/icons/Map';
 
 const drawerWidth = 240;
 
@@ -81,7 +79,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function SideBar() {
   const classes = useStyles();
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
