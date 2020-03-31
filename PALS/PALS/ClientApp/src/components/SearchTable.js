@@ -58,6 +58,10 @@ const useStyles = makeStyles({
         top: 20,
         width: 1,
     },
+    link: {
+        textDecoration: 'none',
+        color: 'black',
+    }
 });
 
 function descendingComparator(a, b, orderBy) {
@@ -226,7 +230,7 @@ function processSummaryFilter(filter, summaries) {
     });
 }
 
-function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order, orderBy) {
+function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order, orderBy, classes) {
 
     if (loading) {
         return (
@@ -286,9 +290,7 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
                     {new Date(result.documentDate).toLocaleDateString('en-US')}
                 </TableCell>
                 <TableCell align="left">
-                    {result.text}
-                    <br />
-                    <a href={result.documentUrl}>{" Go to document"}<ChevronRightIcon /></a>
+                    <a className={classes.link} href={result.documentUrl}>{result.text}<ChevronRightIcon /></a>
                 </TableCell>
             </TableRow>
         );
@@ -340,7 +342,8 @@ function SearchTable(props) {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
         order,
-        orderBy);    
+        orderBy,
+        classes);    
 
     return (
         <Paper>
