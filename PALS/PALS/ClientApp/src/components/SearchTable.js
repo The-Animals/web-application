@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -14,21 +14,30 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Tooltip from '@material-ui/core/Tooltip';
 
-import MLA from '../shared/carson.jpg';
+import { Link } from "react-router-dom"; 
+
+import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
+import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 import { updateSummaryOffset } from '../actions/summaryTableActions';
+import { mlaSelected } from '../actions/mlaListActions';
 
 const mapStateToProps = state => {
     return {
         allSummaries: state.allSummaries,
         summaryFilter: state.summaryFilter,
-        loading: state.loading
+        loading: state.loading,
+        mlas: state.mlas
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateSummaryOffset: offset => dispatch(updateSummaryOffset(offset))
+        updateSummaryOffset: offset => dispatch(updateSummaryOffset(offset)),
+        fetchMlaSummaries: mlaId => dispatch(fetchMlaSummaries(mlaId)),
+        fetchMlaParticipation: mlaId => dispatch(fetchMlaParticipation(mlaId)),
+        mlaSelected: mla => dispatch(mlaSelected(mla)),
     };
 }
 
@@ -61,7 +70,7 @@ const useStyles = makeStyles({
     link: {
         textDecoration: 'none',
         color: 'black',
-    }
+    },
 });
 
 function descendingComparator(a, b, orderBy) {
@@ -230,7 +239,28 @@ function processSummaryFilter(filter, summaries) {
     });
 }
 
-function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order, orderBy, classes) {
+function handleGoToMLA(
+    mlas,
+    selectMLADispatch,
+    fetchMlaSummariesDispatch,
+    fetchMlaParticipationDispatch,
+    mlaId)
+{
+    const mla = mlas.find(mla => mla.id === mlaId);
+    selectMLADispatch(mla);
+    fetchMlaSummariesDispatch(mlaId);
+    fetchMlaParticipationDispatch(mlaId);
+}
+
+function generateMlaRows(
+    mlas,
+    selectMLADispatch,
+    fetchMlaSummariesDispatch,
+    fetchMlaParticipationDispatch,
+    filteredSummaries,
+    loading,
+    sliceStart, sliceEnd, order, orderBy,
+    classes) {
 
     if (loading) {
         return (
@@ -277,8 +307,19 @@ function generateMlaRows(filteredSummaries, loading, sliceStart, sliceEnd, order
         .map(result =>
             <TableRow key={generateKey(result)}>
                 <PersonTableCell component="th" scope="row">
-                    <img src={getImage(result.name)} alt={result.name} width="120px" height="150px" />
-                    {result.name}
+                    <Tooltip title="Click to view MLA" aria-label="add" placement="left">
+                    <Link to="/" onClick={() => {
+                        handleGoToMLA(
+                            mlas,
+                            selectMLADispatch,
+                            fetchMlaSummariesDispatch,
+                            fetchMlaParticipationDispatch,
+                            result.mlaId)
+                    }}>
+                        <img src={getImage(result.name)} alt={result.name} width="120px" height="150px" />
+                        {result.name}
+                    </Link>
+                    </Tooltip>
                 </PersonTableCell>
                 <TableCell>
                     {result.mlaRank}
@@ -337,6 +378,10 @@ function SearchTable(props) {
     }
 
     const mlaRows = generateMlaRows(
+        props.mlas,
+        props.mlaSelected,
+        props.fetchMlaSummaries,
+        props.fetchMlaParticipation,
         filteredSummaries,
         props.loading,
         page * rowsPerPage,
