@@ -68,9 +68,10 @@ namespace PALS.Services
 		 */
         public async Task<MLA> GetMLA(int ridingNumber)
         {
-            var sql = @"SELECT *
-					  FROM db.mlas
+            var sql = @"SELECT m.*, c.MostSimilar, c.LeastSimilar
+					  FROM db.mlas as m, db.mlacomparison AS c
 					  WHERE RidingNumber = @RidingNumber
+            AND c.MLAId = m.Id
 					  LIMIT 1";
 
             MySqlParameter[] parameters = { new MySqlParameter("@RidingNumber", ridingNumber) };
@@ -88,8 +89,11 @@ namespace PALS.Services
         public async Task<List<MLA>> GetAllMLAs()
         {
             var mlas = new List<MLA>();
-            var sql = @"SELECT *
-					  FROM db.mlas";
+
+            var sql = @"SELECT m.*, c.MostSimilar, c.LeastSimilar
+            FROM db.mlas AS m, db.mlacomparison AS c
+            WHERE c.MLAId = m.Id";
+
 
             using (var dataReader = await this.ExecuteAsync(sql))
             {
@@ -158,12 +162,12 @@ namespace PALS.Services
                         FROM db.documents d
                         LEFT JOIN db.summaries_@MLA_ID s ON d.Id = s.DocumentId
                         GROUP BY d.Date;";
-            
+
             MySqlParameter[] parameters = {
                 new MySqlParameter("@MLA_ID", mlaId)
             };
 
-            using(var dataReader = await this.ExecuteAsync(sql, parameters)) 
+            using(var dataReader = await this.ExecuteAsync(sql, parameters))
             {
                 while (dataReader.Read())
                 {

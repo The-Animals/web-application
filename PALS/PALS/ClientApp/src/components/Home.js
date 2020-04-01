@@ -44,7 +44,7 @@ class Home extends Component {
     render() {
     return (
         <div style={{height: '100%'}}>
-            <div className="container" style={{height: '100%'}}>
+            <div className="container" style={{height: '100%', marginTop: 50, margingLeft: 50}}>
 
                 <div className="row" style={{height: '65%'}}>
 
