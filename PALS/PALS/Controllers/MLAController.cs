@@ -20,13 +20,6 @@ namespace PALS.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<MLA> GetMLA(int id)
-        {
-            return await databaseService.GetMLA(id);
-        }
-
-        [HttpGet]
         [Route("all")]
         public async Task<List<MLA>> GetAllMLAs()
         {

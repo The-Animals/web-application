@@ -84,7 +84,7 @@ export default function FullWidthTabs() {
         >
           <Tab label="MLA Info" {...createDynamicProps(0)} />
           <Tab label="Summaries" {...createDynamicProps(1)} />
-          <Tab label="Topics" {...createDynamicProps(2)} />
+          <Tab label="MLA Comparison" {...createDynamicProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0} dir={theme.direction} className={classes.panel}>

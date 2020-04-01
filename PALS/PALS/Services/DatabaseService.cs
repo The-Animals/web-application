@@ -63,29 +63,6 @@ namespace PALS.Services
             }
         }
 
-        /**
-		 * Gets MLA meta-data and summaries.
-		 */
-        public async Task<MLA> GetMLA(int ridingNumber)
-        {
-            var sql = @"SELECT m.*, c.MostSimilar, c.LeastSimilar
-					  FROM db.mlas as m, db.mlacomparison AS c
-					  WHERE RidingNumber = @RidingNumber
-            AND c.MLAId = m.Id
-					  LIMIT 1";
-
-            MySqlParameter[] parameters = { new MySqlParameter("@RidingNumber", ridingNumber) };
-
-            using (var dataReader = await this.ExecuteAsync(sql, parameters))
-            {
-                if (dataReader.Read())
-                {
-                    return new MLA(dataReader);
-                }
-            }
-            throw new DataException("No data returned");
-        }
-
         public async Task<List<MLA>> GetAllMLAs()
         {
             var mlas = new List<MLA>();
