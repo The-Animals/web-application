@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MLAProfileCard from './MLAProfileCard.js';
 import MLASummariesTable from './MLASummariesTable.js';
+import SimilaritiesTable from './SimilaritiesTable.js';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -83,13 +84,17 @@ export default function FullWidthTabs() {
         >
           <Tab label="MLA Info" {...createDynamicProps(0)} />
           <Tab label="Summaries" {...createDynamicProps(1)} />
+          <Tab label="Topics" {...createDynamicProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0} dir={theme.direction} className={classes.panel}>
-        <MLAProfileCard />
+        <MLAProfileCard/>
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction} className={classes.panel}>
         <MLASummariesTable />
+      </TabPanel>
+      <TabPanel value={value} index={2} dir={theme.direction} className={classes.panel}>
+        <SimilaritiesTable />
       </TabPanel>
     </div>
   );

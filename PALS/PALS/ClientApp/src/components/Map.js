@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 
 import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
-import { mlaSelected } from '../actions/mlaListActions';
+import { mlaSelected, similarMla, differentMla } from '../actions/mlaListActions';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazhmMXJmdWgwMjd6M21wZHc1bWFxeWRtIn0.ptbqpiRLFxgKwJO_NIsvxg';
 

@@ -13,7 +13,9 @@ import Default_MLA from '../shared/Default_MLA.jpg';
 import Grid from '@material-ui/core/Grid';
 
 const mapStateToProps = state => {
-    return { mla: state.mla };
+    return { mla: state.mla,
+             mlas: state.mlas
+           };
 };
 
 const useStyles = makeStyles({
@@ -50,46 +52,56 @@ const useStyles = makeStyles({
 function MLAProfileCard(props) {
     const classes = useStyles();
 
-    const getImage = () =>  {
-        if (Object.keys(props.mla).length === 0)
+    const getImage = mla =>  {
+        if (Object.keys(mla).length === 0)
         {
             return Default_MLA;
         }
-        else 
+        else
         {
-            var replaced = props.mla.name.split(' ').join('_');
+            var replaced = mla.name.split(' ').join('_');
             return 'http://162.246.157.124/'+ replaced + '.jpg';
         }
     }
+
+    var mla;
+
+    if (props.type === 'similar') {
+      mla = props.mlas.filter(mla => props.mla.similar === mla.id)[0];
+    } else if (props.type === 'different') {
+      mla = props.mlas.filter(mla => props.mla.different === mla.id)[0];
+    } else {
+      mla = props.mla;
+    };
 
     return (
         <Card className={classes.root} id="testing">
             <CardMedia
                 className={classes.img}
-                image={getImage()}
-                title={props.mla.name}
+                image={getImage(mla)}
+                title={mla.name}
             />
             <div className={classes.details}>
                 <CardContent>
                     <Typography className={classes.title} variant="h5" component="h2" gutterBottom>
-                        {props.mla.name}
+                        {mla.name}
                     </Typography>
                     <Typography className={classes.pos} color="textSecondary">
-                        {props.mla.riding}
+                        {mla.riding}
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Phone #:  <br />
-                                {props.mla.constituencyPhone} (Constituency Office) <br />
-                                {props.mla.legislaturePhone}  (Legislature Office) <br />
+                                {mla.constituencyPhone} (Constituency Office) <br />
+                                {mla.legislaturePhone}  (Legislature Office) <br />
                     </Typography>
                     <Typography className={classes.info} variant="body2" component="p">
                         Email:  <br />
-                        {props.mla.email}
+                        {mla.email}
                     </Typography>
                 </CardContent>
                 <CardActions>
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-                        <Button className={classes.partyButton} size="small">{props.mla.party || ""}</Button>
+                        <Button className={classes.partyButton} size="small">{mla.party || ""}</Button>
                     </Grid>
                 </CardActions>
             </div>
