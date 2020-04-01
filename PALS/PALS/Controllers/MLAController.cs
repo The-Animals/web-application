@@ -31,11 +31,11 @@ namespace PALS.Controllers
         public async Task<List<MLA>> GetAllMLAs()
         {
             var allMLAs = await databaseService.GetAllMLAs();
-            allMLAs.Insert(0, new MLA
-            {
-                Name = "ALL",
-                Riding = "ALL"
-            });
+            // allMLAs.Insert(0, new MLA
+            // {
+            //     Name = "ALL",
+            //     Riding = "ALL"
+            // });
             return allMLAs;
         }
 
