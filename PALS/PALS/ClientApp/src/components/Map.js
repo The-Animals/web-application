@@ -86,7 +86,7 @@ class MapBox extends Component {
                 'source-layer': '2019Boundaries_ED-Shapefiles-2nzdq4',
                 'layout': {},
                 'paint': {
-                    'line-color': '#FEBA35',
+                    'line-color': '#F88017',
                     'line-width': 1
                 }
             });
