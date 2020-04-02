@@ -15,7 +15,8 @@ import {
 import {
     FETCH_MLA_PARTICIPATION_BEGIN,
     FETCH_MLA_PARTICIPATION_SUCCESS,
-    FETCH_MLA_PARTICIPATION_ERROR
+    FETCH_MLA_PARTICIPATION_ERROR,
+    FETCH_MLA_PARTICIPATION_ABORT
 } from '../constants/mlaParticipationActionTypes.js';
 
 import {
@@ -35,6 +36,7 @@ const initialState = {
     mlaSummaries: [],
     mlaSummaryDateFilter: [],
     mlaParticipation: [],
+    mlaParticipationAbort: new AbortController(),
     allSummaries: [],
     summaryFilter:
     {
@@ -46,6 +48,7 @@ const initialState = {
     },
     summaryOffset: 0,
     loading: false,
+    mlaParticipationLoading: false,
     error: null,
     firstTimeLoad: false,
 };
@@ -70,11 +73,13 @@ function rootReducer(state = initialState, action) {
         case SET_MLA_SUMMARY_DATE_FILTER: 
             return { ...state, mlaSummaryDateFilter: action.payload.mlaSummaryDateFilter }
         case FETCH_MLA_PARTICIPATION_BEGIN:
-            return { ...state, loading: true, error: null };
+            return { ...state, mlaParticipationLoading: true, error: null };
         case FETCH_MLA_PARTICIPATION_SUCCESS:
-            return { ...state, loading: false, mlaParticipation: action.payload.participation };
+            return { ...state, mlaParticipationLoading: false, mlaParticipation: action.payload.participation };
         case FETCH_MLA_PARTICIPATION_ERROR:
-            return { ...state, loading: false, error: action.payload.error };
+            return { ...state, error: action.payload.error };
+        case FETCH_MLA_PARTICIPATION_ABORT:
+            return { ...state, mlaParticipationAbort: new AbortController() };
         case FETCH_SUMMARIES_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_SUMMARIES_SUCCESS:
