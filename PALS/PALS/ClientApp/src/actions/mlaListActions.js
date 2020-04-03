@@ -32,8 +32,24 @@ export function fetchMlas() {
             .then(handleErrors)
             .then(res => res.json())
             .then(json => {
-                dispatch(fetchMlaListSuccess(json));
-                return json;
+                
+                const defaultMLA = {
+                    id: 0,
+                    name: "ALL",
+                    riding: "ALL",
+                    ridingNumber: 0,
+                    constituencyPhone: null,
+                    legislaturePhone: null,
+                    email: null,
+                    party: null,
+                    similar: 0,
+                    different: 0
+                };
+                
+                const mlas = [defaultMLA].concat(json);
+
+                dispatch(fetchMlaListSuccess(mlas));
+                return mlas;
             })
             .catch(error => dispatch(fetchMlaListError(error)));
     };

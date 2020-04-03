@@ -7,6 +7,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+
 import { updateSummaryFilter } from '../actions/summaryTableActions';
 
 const mapStateToProps = state => {
@@ -49,6 +56,21 @@ function mapMlasToObject(mlas) {
 
 }
 
+// https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 function SearchWithFilters(props) {
     const classes = useStyles();    
 
@@ -62,14 +84,14 @@ function SearchWithFilters(props) {
         setQuery(event.target.value);
     };
 
-    const [startDate, setStartDate] = useState("2019-01-01");
+    const [startDate, setStartDate] = useState(new Date("Tue Jan 01 2019 00:00:00"));
     const handleStartDateChange = event => {
-        setStartDate(event.target.value);
+        setStartDate(new Date(event));
     };
 
-    const [endDate, setEndDate] = useState("2020-04-01");
+    const [endDate, setEndDate] = useState(new Date("Wed Apr 01 2020 00:00:00"));
     const handleEndDateChange = event => {
-        setEndDate(event.target.value);
+        setEndDate(new Date(event));
     };
 
     const [party, setParty] = useState("ALL");
@@ -95,8 +117,8 @@ function SearchWithFilters(props) {
             props.updateSummaryFilter({
                 mlaId: mla,
                 caucus: party,
-                startDate: startDate,
-                endDate: endDate,
+                startDate: formatDate(startDate),
+                endDate: formatDate(endDate),
                 query: query,
             }),
             500);
@@ -107,14 +129,14 @@ function SearchWithFilters(props) {
         props.updateSummaryFilter({
             mlaId: mla,
             caucus: party,
-            startDate: startDate,
-            endDate: endDate,
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
             query: query,
         });     
     }, [mla, party, startDate, endDate]);
 
-    // TODO: Replace native date pickers with material-ui/pickers
     return (
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <div className="container">
 
             <ToggleButtonGroup size="large" value={party} exclusive onChange={handlePartyChange}>
@@ -168,32 +190,40 @@ function SearchWithFilters(props) {
                 ))}
             </TextField>
 
-            <TextField
+            <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
                 id="startDate"
                 label="From Date"
-                type="date"
-                defaultValue={startDate}
+                maxDate={endDate}
+                value={startDate}
                 onChange={handleStartDateChange}
-                className={classes.textField}
-                InputLabelProps={{
-                    shrink: true,
+                KeyboardButtonProps={{
+                    'aria-label': 'change date',
                 }}
             />
 
-            <TextField
+            <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
                 id="endDate"
                 label="To Date"
-                type="date"
-                defaultValue={endDate}            
+                minDate={startDate}
+                value={endDate}
                 onChange={handleEndDateChange}
-                className={classes.textField}
-                InputLabelProps={{
-                    shrink: true,
+                KeyboardButtonProps={{
+                    'aria-label': 'change date',
                 }}
             />
+
             </div>
 
         </div>
+        </MuiPickersUtilsProvider>
     );
 
 }
