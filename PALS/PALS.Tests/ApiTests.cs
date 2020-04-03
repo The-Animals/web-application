@@ -83,5 +83,58 @@ namespace PALS.Tests
             hashSummaries0.ExceptWith(hashSummaries1);
             Assert.True(hashSummaries0.Count == 1000);
         }
+
+        [Fact]
+        public async void Test_InvalidMLAIdForSummaries() 
+        {
+            SummaryController summaryController = new SummaryController(); 
+            try { 
+                List<Summary> summaries = await summaryController.GetSummariesMLA(100, 10);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException)
+            {
+                Assert.True(true);
+            }
+        }
+
+        [Fact]
+        public async void Test_InvalidMLAIdForParticipation() 
+        {
+            SummaryController summaryController = new SummaryController(); 
+            try { 
+                List<Participation> participation = await summaryController.GetParticipationTimeSeries(100);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException)
+            {
+                Assert.True(true);
+            }
+        }
+
+        [Fact]
+        public async void Test_InvalidOffset() 
+        {
+            SummaryController summaryController = new SummaryController(); 
+            try { 
+                List<Summary> summaries = await summaryController.GetAllSummaries(1000, -1);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException)
+            {
+                Assert.True(true);
+            }
+        }
+
+        [Fact]
+        public async void Test_InvalidNSummaries() 
+        {
+            SummaryController summaryController = new SummaryController(); 
+            try { 
+                List<Summary> summaries = await summaryController.GetAllSummaries(-10);
+            }
+            catch (MySql.Data.MySqlClient.MySqlException)
+            {
+                Assert.True(true);
+            }
+        }
+
     }
 }

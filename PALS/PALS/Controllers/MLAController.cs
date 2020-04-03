@@ -30,14 +30,7 @@ namespace PALS.Controllers
         [Route("all")]
         public async Task<List<MLA>> GetAllMLAs()
         {
-            var allMLAs = await databaseService.GetAllMLAs();
-            // allMLAs.Insert(0, new MLA
-            // {
-            //     Name = "ALL",
-            //     Riding = "ALL"
-            // });
-            return allMLAs;
+            return await databaseService.GetAllMLAs();
         }
-
     }
 }
