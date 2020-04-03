@@ -27,7 +27,7 @@ namespace PALS.Controllers
 
         [Route("all/{n?}/{offset?}")]
         [HttpGet]
-        public async Task<List<Summary>> GetAllSummaries(int n = 50000, int offset = 0) 
+        public async Task<List<Summary>> GetAllSummaries(int n = 10000, int offset = 0) 
         {
             return await databaseService.GetAllSummaries(n, offset);
         }
