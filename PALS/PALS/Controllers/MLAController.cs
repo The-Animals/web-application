@@ -25,6 +25,5 @@ namespace PALS.Controllers
         {
             return await databaseService.GetAllMLAs();
         }
-
     }
 }
