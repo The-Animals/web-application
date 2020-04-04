@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using PALS.Models;
 using System.Data.Common;
+using System.Threading;
 
 namespace PALS.Services
 {
@@ -82,7 +83,7 @@ namespace PALS.Services
             }
         }
 
-        public async Task<List<Summary>> GetMLASummaries(int mlaId, int n)
+        public async Task<List<Summary>> GetMLASummaries(int mlaId, int n, CancellationToken cancelationToken)
         {
             var summaries = new List<Summary>();
 
@@ -99,6 +100,7 @@ namespace PALS.Services
             {
                 while (dataReader.Read())
                 {
+                    cancelationToken.ThrowIfCancellationRequested();
                     summaries.Add(new Summary(dataReader));
                 }
             }
@@ -131,7 +133,7 @@ namespace PALS.Services
             return summaries;
         }
 
-        public async Task<List<Participation>> GetParticipationData(int mlaId)
+        public async Task<List<Participation>> GetParticipationData(int mlaId, CancellationToken cancelationToken)
         {
             var participations = new List<Participation>();
 
@@ -148,6 +150,7 @@ namespace PALS.Services
             {
                 while (dataReader.Read())
                 {
+                    cancelationToken.ThrowIfCancellationRequested();
                     participations.Add(new Participation(dataReader));
                 }
             }
