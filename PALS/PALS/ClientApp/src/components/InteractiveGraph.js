@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { ResponsiveBar } from '@nivo/bar';
 
+import Grid from '@material-ui/core/Grid';
 import { setMlaSummaryDateFilter } from '../actions/mlaSummaryActions';
+
+import GraphLogo from "../shared/GraphLogo.png"
 
 const mapStateToProps = state => {
     return {
         mlaParticipation: state.mlaParticipation,
-        mlaSummaryDateFilter: state.mlaSummaryDateFilter
+        mlaSummaryDateFilter: state.mlaSummaryDateFilter,
+        mlaParticipationLoading: state.mlaParticipationLoading
     };
 };
 
@@ -101,6 +105,28 @@ class InteractiveGraph extends Component {
 
     render() {
         return (
+            this.props.mlaParticipationLoading ?
+
+            <Grid container
+                spacing={3}
+                justify="center"
+                alignItems="center"
+                className={"fillHeight"}
+            >
+
+                <Grid item xs={12}>
+                    <img
+                        src={GraphLogo}
+                        alt="Graph Loading..."
+                        width="300px" height="200px"
+                        className={"centerImage"}
+                    />
+                </Grid>
+
+            </Grid>
+            
+                :
+
             <ResponsiveBar
                 data={this.data()}
                 keys={[ 'Meaningful Contributions' ]}
