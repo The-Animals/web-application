@@ -43,10 +43,14 @@ const useStyles = makeStyles({
         width: 120,
         height: 150,
     },
-    partyButton: {
+    ucp: {
+        color: 'white',
+        backgroundColor: '#4682b4'
+    },
+    ndp: {
         color: 'white',
         backgroundColor: '#F58220'
-    }
+    },
 });
 
 function MLAProfileCard(props) {
@@ -101,7 +105,9 @@ function MLAProfileCard(props) {
                 </CardContent>
                 <CardActions>
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-                        <Button className={classes.partyButton} size="small">{mla.party || ""}</Button>
+                        <Button
+                            className={mla.party == "NDP" ? classes.ndp : classes.ucp }
+                            size="small">{mla.party || ""}</Button>
                     </Grid>
                 </CardActions>
             </div>
