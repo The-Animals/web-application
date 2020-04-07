@@ -25,6 +25,20 @@ import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 import { updateSummaryOffset } from '../actions/summaryTableActions';
 import { mlaSelected } from '../actions/mlaListActions';
 
+/**
+ * **SRS_REFERENCE**
+ *
+ * Contains the search table. Displays the search results to the user and allows
+ * them to order by party rank, mla rank and date. Also supports pagination.
+ * Also clicking on a summary will link back to original statment and clicking
+ * on an MLA will lead the user back to the front page.
+ *
+ * Order summaries by MLA Rank, Party Rank and date: (REQ16)
+ * View the original statement from a summary: (REQ17)
+ * Search for an MLA and then view them on the front page: (REQ10, REQ13)
+ *
+ */
+
 const mapStateToProps = state => {
     return {
         allSummaries: state.allSummaries,

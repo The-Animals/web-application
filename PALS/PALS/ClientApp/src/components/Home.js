@@ -10,6 +10,19 @@ import { fetchMlas, mlaSelected } from "../actions/mlaListActions";
 import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Contains the MLA profile card, summaries table and comparisons as well as
+ * the interactive involvement overtime graph and interactive map. Handles
+ * prefetching of MLAs, MLA summaries and MLA participation data.
+ * 
+ * Interactive map: (REQ12), 
+ * View individual MLA's metadata and summaries: (REQ7, REQ11, REQ15),
+ * Involvement overtime graph: (REQ8, REQ10)
+ * 
+ */
+
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
@@ -36,8 +49,6 @@ class Home extends Component {
     }
 
     componentWillReceiveProps(props) {
-
-        console.log("receiving mlas: ", props.mlas);
 
         if (Object.keys(props.mla).length === 0) {
             const mla = props.mlas.slice(1, props.mlas.length)[Math.floor(Math.random() * props.mlas.length)];

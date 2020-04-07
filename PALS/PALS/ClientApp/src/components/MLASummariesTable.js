@@ -12,6 +12,16 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Skeleton from '@material-ui/lab/Skeleton';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+/**
+ * **SRS_REFERENCE**
+ *
+ * Contains the MLA summaries table. Allows users to view the top
+ * ranked summaries for an MLA in a table.
+ *
+ * View individual MLA's summaries: (REQ7)
+ *
+ */
+
 const mapStateToProps = state => {
     return { 
         mlaSummaries: state.mlaSummaries,

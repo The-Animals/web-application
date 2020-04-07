@@ -7,6 +7,19 @@ import SearchWithFilters from './SearchWithFilters';
 import { fetchMlas } from '../actions/mlaListActions.js';
 import { fetchSummaries, setFirstTimeLoad } from '../actions/summaryTableActions';
 
+/**
+ * **SRS_REFERENCE**
+ *
+ * Contains the search table, and search filters. Handles prefetching of the 
+ * MLAs and summaries.
+ *
+ * Filter summaries by riding, MLA, token and date: (REQ13, REQ14)
+ * Filter summaries by Party: (REQ9, REQ16)
+ * Order summaries by MLA Rank, Party Rank and date: (REQ16)
+ * View the original statement from a summary: (REQ17)
+ * Search for an MLA and then view them on the front page: (REQ10, REQ13)
+ *
+ */
 
 const mapStateToProps = state => {
     return {

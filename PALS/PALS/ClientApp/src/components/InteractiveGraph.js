@@ -7,6 +7,16 @@ import { setMlaSummaryDateFilter } from '../actions/mlaSummaryActions';
 
 import GraphLogo from "../shared/GraphLogo.png"
 
+/** 
+ *  **SRS_REFERENCE**
+ *  
+ * Contains the interactive involvement overtime graph which allows
+ * users to select one or more bars to filter summaries by session(s).
+ *
+ * Interactive map: (REQ12)
+ *
+ */
+
 const mapStateToProps = state => {
     return {
         mlaParticipation: state.mlaParticipation,

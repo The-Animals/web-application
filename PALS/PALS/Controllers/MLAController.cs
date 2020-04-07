@@ -5,6 +5,15 @@ using PALS.Models;
 
 using PALS.Services;
 
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Endpoint for retrieving MLA meta-data.
+ * 
+ * View individual MLA's metadata and summaries: (REQ15),
+ * 
+ */
+
 namespace PALS.Controllers
 {
     // Means anything here is called by prepending "api/mla"

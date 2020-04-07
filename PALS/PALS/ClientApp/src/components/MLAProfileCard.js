@@ -12,6 +12,15 @@ import Grid from '@material-ui/core/Grid';
 
 import Default_MLA from '../shared/Default_MLA.jpg';
 
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Contains the MLA metadata information
+ *
+ * View individual MLA's metadata and summaries: (REQ15),
+ *
+ */
+
 const mapStateToProps = state => {
     return { mla: state.mla,
              mlas: state.mlas

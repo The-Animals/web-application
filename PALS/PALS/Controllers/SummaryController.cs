@@ -7,6 +7,16 @@ using System.Threading;
 using PALS.Services;
 using PALS.Models;
 
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Endpoint for retreiving MLA summaries, all summaries and participation data.
+ * 
+ * View individual MLA's metadata and summaries: (REQ7, REQ11, REQ15),
+ * Involvement overtime graph: (REQ8, REQ10)
+ * 
+ */
+
 namespace PALS.Controllers
 {
     [Route("api/[controller]")]
