@@ -2,12 +2,27 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { ResponsiveBar } from '@nivo/bar';
 
+import Grid from '@material-ui/core/Grid';
 import { setMlaSummaryDateFilter } from '../actions/mlaSummaryActions';
+
+import GraphLogo from "../shared/GraphLogo.png"
+
+/** 
+ *  **SRS_REFERENCE**
+ *  
+ * Contains the interactive involvement overtime graph which allows
+ * users to select one or more bars to filter summaries by session(s).
+ *
+ * Interactive map: (REQ12)
+ *
+ */
 
 const mapStateToProps = state => {
     return {
+        mla: state.mla,
         mlaParticipation: state.mlaParticipation,
-        mlaSummaryDateFilter: state.mlaSummaryDateFilter
+        mlaSummaryDateFilter: state.mlaSummaryDateFilter,
+        mlaParticipationLoading: state.mlaParticipationLoading
     };
 };
 
@@ -25,6 +40,12 @@ const hoveredSelectedColor = '#E46C03';
 class InteractiveGraph extends Component {
     constructor(props) {
         super(props);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.mla !== this.props.mla) {
+            this.props.setMlaSummaryDateFilter([]); // Reset the filter.
+        }
     }
 
     getYScale() {
@@ -101,6 +122,28 @@ class InteractiveGraph extends Component {
 
     render() {
         return (
+            this.props.mlaParticipationLoading ?
+
+            <Grid container
+                spacing={3}
+                justify="center"
+                alignItems="center"
+                className={"fillHeight"}
+            >
+
+                <Grid item xs={12}>
+                    <img
+                        src={GraphLogo}
+                        alt="Graph Loading..."
+                        width="300px" height="200px"
+                        className={"centerImage"}
+                    />
+                </Grid>
+
+            </Grid>
+            
+                :
+
             <ResponsiveBar
                 data={this.data()}
                 keys={[ 'Meaningful Contributions' ]}

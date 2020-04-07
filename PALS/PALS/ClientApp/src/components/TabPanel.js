@@ -42,18 +42,16 @@ function TabPanel(props) {
 
 const useStyles = makeStyles(theme => ({
     root: {
-      height: "100%"
-    },
-    bar: {
-      height: "15%"
+        height: "100%"
     },
     panel: {
-      height: "85%",
-      width: "100%"
+        height: "calc(100vh - 400px)",
+        minHeight: "265px",
+        width: "100%"
     },
     profile: {
-      height: "100%",
-      width: "100%"
+          height: "100%",
+          width: "100%"
     },
 }));
 

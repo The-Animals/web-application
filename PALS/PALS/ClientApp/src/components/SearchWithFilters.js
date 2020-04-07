@@ -10,11 +10,21 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
-    KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 
 import { updateSummaryFilter } from '../actions/summaryTableActions';
+
+/**
+ * **SRS_REFERENCE**
+ *
+ * Contains the search filters. Allows users to search by riding, MLA,
+ * token, date and party.
+ *
+ * Filter summaries by riding, MLA, token and date: (REQ13, REQ14)
+ * Filter summaries by Party: (REQ9, REQ16)
+ *
+ */
 
 const mapStateToProps = state => {
     return {

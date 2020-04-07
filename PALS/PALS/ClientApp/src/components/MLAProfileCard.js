@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,9 +8,18 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 import Default_MLA from '../shared/Default_MLA.jpg';
-import Grid from '@material-ui/core/Grid';
+
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Contains the MLA metadata information
+ *
+ * View individual MLA's metadata and summaries: (REQ15),
+ *
+ */
 
 const mapStateToProps = state => {
     return { mla: state.mla,
@@ -43,10 +52,14 @@ const useStyles = makeStyles({
         width: 120,
         height: 150,
     },
-    partyButton: {
+    ucp: {
+        color: 'white',
+        backgroundColor: '#4682b4'
+    },
+    ndp: {
         color: 'white',
         backgroundColor: '#F58220'
-    }
+    },
 });
 
 function MLAProfileCard(props) {
@@ -101,7 +114,9 @@ function MLAProfileCard(props) {
                 </CardContent>
                 <CardActions>
                     <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-                        <Button className={classes.partyButton} size="small">{mla.party || ""}</Button>
+                        <Button
+                            className={mla.party == "NDP" ? classes.ndp : classes.ucp }
+                            size="small">{mla.party || ""}</Button>
                     </Grid>
                 </CardActions>
             </div>

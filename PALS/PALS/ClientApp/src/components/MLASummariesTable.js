@@ -9,11 +9,24 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
+import Skeleton from '@material-ui/lab/Skeleton';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+/**
+ * **SRS_REFERENCE**
+ *
+ * Contains the MLA summaries table. Allows users to view the top
+ * ranked summaries for an MLA in a table.
+ *
+ * View individual MLA's summaries: (REQ7)
+ *
+ */
 
 const mapStateToProps = state => {
     return { 
         mlaSummaries: state.mlaSummaries,
-        mlaSummaryDateFilter: state.mlaSummaryDateFilter
+        mlaSummaryDateFilter: state.mlaSummaryDateFilter,
+        mlaSummariesLoading: state.mlaSummariesLoading
     };
 };
 
@@ -30,8 +43,53 @@ const useStyles = makeStyles({
     }
 });
 
+function generateSkeletonRects(width) {
+    return (
+        <React.Fragment>
+            <Skeleton animation="wave" width={width} />
+            <Skeleton animation="wave" width={width} />
+            <Skeleton animation="wave" width={width} />
+            <Skeleton animation="wave" width={width} />
+        </React.Fragment>
+        );
+}
+
+function generateMlaSummaryRows(
+    summaries,
+    loading,
+    page, rowsPerPage,
+    classes, isMinWindowWidth) {
+
+    if (loading) {
+        return (
+            <TableRow>
+                <TableCell>
+                    {isMinWindowWidth ?
+                        generateSkeletonRects(100) : ""}
+                </TableCell>
+                <TableCell>
+                    { generateSkeletonRects(370) }
+                </TableCell>
+            </TableRow>
+        );
+    }
+    
+    return summaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+        <TableRow key={row.mlaRank} className={classes.row}>
+            <TableCell align="left">
+                {row.mlaRank}
+            </TableCell>
+            <TableCell align="left">
+                {row.text}
+            </TableCell>
+        </TableRow>
+    ));
+    
+}
+
 function MLASummariesTable(props) {
     const classes = useStyles();
+    const minWidthBreakpoint = useMediaQuery('(min-width:1200px)');
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(1);
@@ -59,26 +117,21 @@ function MLASummariesTable(props) {
         }
     }
 
-    var summaries = filterSummaries(props.mlaSummaries);
+    const summaries = filterSummaries(props.mlaSummaries);
+    const summaryRows = generateMlaSummaryRows(
+        summaries,
+        props.mlaSummariesLoading,
+        page, rowsPerPage,
+        classes, minWidthBreakpoint);
 
     return (
         <Paper className={classes.paper}>
           <TableContainer component={Paper} className={classes.container}>
               <Table className={classes.table} stickyHeader aria-label="sticky table">
-                  <TableHead>
-                  </TableHead>
-                  <TableBody>
-                      {summaries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-                          <TableRow key={row.mlaRank} className={classes.row}>
-                              <TableCell align="left">
-                                  {row.mlaRank}
-                              </TableCell>
-                              <TableCell align="left">
-                                  {row.text}
-                              </TableCell>
-                          </TableRow>
-                      ))}
-                  </TableBody>
+                <TableHead></TableHead>
+                <TableBody>
+                    {summaryRows}
+                </TableBody>
               </Table>
           </TableContainer>
           <TablePagination

@@ -15,6 +15,8 @@ import Paper from '@material-ui/core/Paper';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Tooltip from '@material-ui/core/Tooltip';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 
 import { Link } from "react-router-dom"; 
 
@@ -22,6 +24,20 @@ import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
 import { updateSummaryOffset } from '../actions/summaryTableActions';
 import { mlaSelected } from '../actions/mlaListActions';
+
+/**
+ * **SRS_REFERENCE**
+ *
+ * Contains the search table. Displays the search results to the user and allows
+ * them to order by party rank, mla rank and date. Also supports pagination.
+ * Also clicking on a summary will link back to original statment and clicking
+ * on an MLA will lead the user back to the front page.
+ *
+ * Order summaries by MLA Rank, Party Rank and date: (REQ16)
+ * View the original statement from a summary: (REQ17)
+ * Search for an MLA and then view them on the front page: (REQ10, REQ13)
+ *
+ */
 
 const mapStateToProps = state => {
     return {
@@ -71,6 +87,9 @@ const useStyles = makeStyles({
         textDecoration: 'none',
         color: 'black',
     },
+    summmariesLoading: {
+        fontSize: '1.5em'
+    }
 });
 
 function descendingComparator(a, b, orderBy) {
@@ -260,10 +279,19 @@ function generateMlaRows(
     filteredSummaries,
     loading,
     sliceStart, sliceEnd, order, orderBy,
+    loadedSummariesLength,
     classes) {
 
     if (loading) {
-        return (
+        return ([
+            <TableRow>
+                <TableCell align="center" colSpan={5} className={classes.summariesLoading}>
+                    <CircularProgress />
+                    <Typography variant="h4" component="h2">
+                        {"Summaries loaded: " + loadedSummariesLength}
+                    </Typography>                    
+                </TableCell>
+            </TableRow>,
             <TableRow>
                 <TableCell>
                     <Skeleton variant="rect" width={150} height={200} />
@@ -289,7 +317,7 @@ function generateMlaRows(
                     <Skeleton animation="wave" width={400} />
                 </TableCell>
             </TableRow>
-        );
+        ]);
     }
 
     if (filteredSummaries.length === 0) {
@@ -388,6 +416,7 @@ function SearchTable(props) {
         page * rowsPerPage + rowsPerPage,
         order,
         orderBy,
+        summaries.length,
         classes);    
 
     return (

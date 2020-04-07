@@ -8,6 +8,17 @@ import { mlaSelected, similarMla, differentMla } from '../actions/mlaListActions
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidnBwYXRlbDExMSIsImEiOiJjazhmMXJmdWgwMjd6M21wZHc1bWFxeWRtIn0.ptbqpiRLFxgKwJO_NIsvxg';
 
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Contains the interactive map. Allows users to select ridings on the map
+ * and then display the corresponding MLA information and summaries in the 
+ * view.
+ *
+ * View individual MLA's metadata and summaries: (REQ7, REQ11, REQ15),
+ *
+ */
+
 const mapStateToProps = state => {
     return {
         mlas: state.mlas,
@@ -145,12 +156,12 @@ class MapBox extends Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <div className='sidebarStyle'>
                     <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
                 </div>
                 <div ref={el => this.mapContainer = el} className='mapContainer' />
-            </div>
+            </React.Fragment>
         );
     }
 }

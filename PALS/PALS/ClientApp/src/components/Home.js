@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
+import Grid from "@material-ui/core/Grid";
+
 import { Summary } from './Summary';
 import MapBox from './Map';
 import InteractiveGraph from './InteractiveGraph';
 import { fetchMlas, mlaSelected } from "../actions/mlaListActions";
 import { fetchMlaSummaries } from '../actions/mlaSummaryActions';
 import { fetchMlaParticipation } from '../actions/mlaParticipationActions';
+
+/**
+ * **SRS_REFERENCE**
+ * 
+ * Contains the MLA profile card, summaries table and comparisons as well as
+ * the interactive involvement overtime graph and interactive map. Handles
+ * prefetching of MLAs, MLA summaries and MLA participation data.
+ * 
+ * Interactive map: (REQ12), 
+ * View individual MLA's metadata and summaries: (REQ7, REQ11, REQ15),
+ * Involvement overtime graph: (REQ8, REQ10)
+ * 
+ */
 
 const mapStateToProps = state => {
     return {
@@ -25,6 +40,7 @@ const mapDispatchToProps = dispatch => {
 }
 
 class Home extends Component {
+    
     static displayName = Home.name;
 
     componentDidMount() {
@@ -33,6 +49,7 @@ class Home extends Component {
     }
 
     componentWillReceiveProps(props) {
+
         if (Object.keys(props.mla).length === 0) {
             const mla = props.mlas.slice(1, props.mlas.length)[Math.floor(Math.random() * props.mlas.length)];
             this.props.fetchMlaSummaries(mla.id);
@@ -42,26 +59,27 @@ class Home extends Component {
     }
 
     render() {
-    return (
-        <div style={{height: '100%'}}>
-            <div className="container" style={{height: '100%', marginTop: 50, margingLeft: 50}}>
+        return (
+        <div style={{ flexGrow: 1, height: '100%' }}>
+            <Grid 
+                container
+                spacing={2}
+                alignItems="stretch"
+                style={{ height: '100%' }}>
 
-                <div className="row" style={{height: '65%'}}>
-
-                    <div className="col-sm" style={{height: '100%'}}>
-                        <MapBox />
+                <Grid item xs={6} style={{ height: 'calc(100vh - 350px)'}}>
+                    <MapBox />
+                </Grid>
+                <Grid item xs={6} style={{ height: 'calc(100vh - 350px)' }}>
+                    <Summary />
+                </Grid>
+                <Grid item xs={12}>
+                    <div style={{height: '300px'}}>
+                        <InteractiveGraph />
                     </div>
-
-                    <div className="col-sm" style={{height: '100%'}}>
-                        <Summary />
-                    </div>
-                </div>
-                <div className="row" style={{height: '35%'}}>
-                    <div className="col-sm" style={{height: '100%'}}>
-                        <InteractiveGraph/>
-                    </div>
-                </div>
-            </div>
+                </Grid>
+    
+            </Grid>
         </div>
     );
     }
