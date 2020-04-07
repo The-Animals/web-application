@@ -19,6 +19,7 @@ import GraphLogo from "../shared/GraphLogo.png"
 
 const mapStateToProps = state => {
     return {
+        mla: state.mla,
         mlaParticipation: state.mlaParticipation,
         mlaSummaryDateFilter: state.mlaSummaryDateFilter,
         mlaParticipationLoading: state.mlaParticipationLoading
@@ -39,6 +40,12 @@ const hoveredSelectedColor = '#E46C03';
 class InteractiveGraph extends Component {
     constructor(props) {
         super(props);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.mla !== this.props.mla) {
+            this.props.setMlaSummaryDateFilter([]); // Reset the filter.
+        }
     }
 
     getYScale() {
