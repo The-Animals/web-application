@@ -23,11 +23,13 @@ code {
     margin-bottom: 10px;
 }
 
+.mapContainer {
+    height: 100%;
+}
+
 .sidebarStyle {
     display: inline-block;
     position: absolute;
-    top: 0;
-    left: 0;
     margin: 12px;
     background-color: #404040;
     color: #ffffff;
@@ -36,17 +38,19 @@ code {
     font-weight: bold;
 }
 
-.mapContainer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
+.fillHeight {
+    height: 100%;
+}
+
+.centerImage {
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
 }
 
 /* Increase max width for search screen. */
-@media (min-width: 1200px) {
+/*@media (min-width: 1200px) {
     .container {
         max-width: 1390px;
     }
-}
+}*/

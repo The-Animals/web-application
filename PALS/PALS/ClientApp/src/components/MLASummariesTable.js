@@ -48,13 +48,13 @@ function generateMlaSummaryRows(
     summaries,
     loading,
     page, rowsPerPage,
-    classes, isMaxWindowWidth) {
+    classes, isMinWindowWidth) {
 
     if (loading) {
         return (
             <TableRow>
                 <TableCell>
-                    {isMaxWindowWidth ?
+                    {isMinWindowWidth ?
                         generateSkeletonRects(100) : ""}
                 </TableCell>
                 <TableCell>
@@ -79,7 +79,7 @@ function generateMlaSummaryRows(
 
 function MLASummariesTable(props) {
     const classes = useStyles();
-    const matches = useMediaQuery('(min-width:1200px)');
+    const minWidthBreakpoint = useMediaQuery('(min-width:1200px)');
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(1);
@@ -112,7 +112,7 @@ function MLASummariesTable(props) {
         summaries,
         props.mlaSummariesLoading,
         page, rowsPerPage,
-        classes, matches);
+        classes, minWidthBreakpoint);
 
     return (
         <Paper className={classes.paper}>
